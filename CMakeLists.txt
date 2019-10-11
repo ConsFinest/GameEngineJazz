@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 2.6)
 project(ENGINEJAZZ)
 
+include_directories(src)
+
 add_library(GameEngine
 	src/GameEngine/engine.cpp
+	src/GameEngine/engine.h
+	src/GameEngine/entity.cpp
+	src/GameEngine/entity.h
 )
 target_link_libraries(GameEngine SDL2 opengl32 glew32)
 

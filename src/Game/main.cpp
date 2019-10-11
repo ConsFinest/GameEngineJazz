@@ -1,8 +1,10 @@
 #include <iostream>
 
+#include <GameEngine/engine.h>
+
+#include <memory>
+
 int main()
 {
-	std::cout << "Hello World" << std::endl;
-
-	return 0;
+	
 }
