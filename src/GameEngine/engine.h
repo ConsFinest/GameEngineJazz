@@ -1,7 +1,7 @@
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
 
-
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -9,8 +9,6 @@ class Entity; //forward declare
 
 class Engine
 {
-	Engine();
-	~Engine();
 
 public: 
 	static std::shared_ptr<Engine> intialize();

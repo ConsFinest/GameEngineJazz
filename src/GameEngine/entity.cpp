@@ -1,15 +1,12 @@
 #include "entity.h"
-
-Entity::Entity()
-{
-}
-
-Entity::~Entity()
-{
-}
+#include "component.h"
 
 void Entity::tick()
 {
+	for (std::vector<std::shared_ptr<Component>>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		(*it)->onTick();
+	}
 }
 
 void Entity::display()
@@ -18,6 +15,6 @@ void Entity::display()
 
 std::shared_ptr<Engine> Entity::getEngine()
 {
-	return std::shared_ptr<Engine>();
+	return engine.lock();
 }
 

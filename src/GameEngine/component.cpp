@@ -1,13 +1,4 @@
 #include "component.h"
-
-Component::Component()
-{
-}
-
-Component::~Component()
-{
-}
-
 void Component::onInit()
 {
 }
@@ -26,10 +17,10 @@ void Component::onDisplay()
 
 std::shared_ptr<Entity> Component::getEntity()
 {
-	return std::shared_ptr<Entity>();
+	return entity.lock();
 }
 
 std::shared_ptr<Engine> Component::getEngine()
 {
-	return std::shared_ptr<Engine>();
+	return getEngine();
 }

@@ -1,6 +1,7 @@
 #ifndef  _COMPONENT_H_
 #define _COMPONENT_H_
 
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -9,8 +10,7 @@ class Engine;
 
 class Component
 {
-	Component();
-	~Component();
+	friend Entity;
 	std::weak_ptr<Entity> entity;
 	void onInit();
 	void onBegin();

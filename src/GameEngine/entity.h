@@ -1,7 +1,7 @@
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
 
-
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -12,8 +12,7 @@ class Component;
 
 class Entity
 {
-	Entity();
-	~Entity();
+	friend Engine;
 	std::weak_ptr<Engine> engine;
 	std::vector<std::shared_ptr<Component>> components;
 	void tick();
