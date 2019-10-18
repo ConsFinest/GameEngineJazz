@@ -8,6 +8,8 @@ add_library(GameEngine
 	src/GameEngine/engine.h
 	src/GameEngine/entity.cpp
 	src/GameEngine/entity.h
+	src/GameEngine/component.cpp
+	src/GameEngine/component.h
 )
 target_link_libraries(GameEngine SDL2 opengl32 glew32)
 

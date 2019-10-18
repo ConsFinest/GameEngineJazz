@@ -3,8 +3,9 @@
 
 
 #include <memory>
+#include <vector>
 
-class Entity;
+class Entity; //forward declare
 
 class Engine
 {
@@ -16,6 +17,10 @@ public:
 	std::shared_ptr<Entity> addEntity();
 	void start();
 	void stop();
+
+private: 
+	std::vector<std::shared_ptr<Entity>> entities;
+	bool running;
 };
 
 
