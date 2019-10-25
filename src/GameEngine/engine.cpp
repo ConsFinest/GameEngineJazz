@@ -17,14 +17,20 @@ std::shared_ptr<Entity> Engine::addEntity()
 
 void Engine::start()
 {
-	/*for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
+	while (true)
 	{
-		(*it)->tick();
-	}*/
-	for (auto it = entities.begin(); it != entities.end(); it++) {
-		(*it)->tick();
+		for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
+		{
+			(*it)->tick();
+			std::cout << "Entity updated" << std::endl;
+		}
+		for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
+		{
+			(*it)->display();
+			std::cout << "Entity Drawns" << std::endl;
+		}
 	}
-	running = true;
+
 }
 
 void Engine::stop()

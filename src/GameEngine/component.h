@@ -11,11 +11,12 @@ class Engine;
 class Component
 {
 	friend Entity;
+
 	std::weak_ptr<Entity> entity;
-	void onInit();
-	void onBegin();
-	void onTick();
-	void onDisplay();
+	virtual void onInit();
+	virtual void onBegin();
+	virtual void onTick();
+	virtual void onDisplay();
 	
 public:
 	std::shared_ptr<Entity>getEntity();

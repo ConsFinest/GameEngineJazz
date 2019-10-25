@@ -13,6 +13,7 @@ class Component;
 class Entity
 {
 	friend Engine;
+
 	std::weak_ptr<Engine> engine;
 	std::vector<std::shared_ptr<Component>> components;
 	void tick();

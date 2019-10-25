@@ -10,6 +10,11 @@ add_library(GameEngine
 	src/GameEngine/entity.h
 	src/GameEngine/component.cpp
 	src/GameEngine/component.h
+	src/GameEngine/Exception.cpp
+	src/GameEngine/Exception.h
+	src/GameEngine/triangle.cpp
+	src/GameEngine/triangleRenderer.h
+	src/GameEngine/triangleRenderer.cpp
 )
 target_link_libraries(GameEngine SDL2 opengl32 glew32)
 
