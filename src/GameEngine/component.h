@@ -4,6 +4,9 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <SDL2/SDL.h>
+#include <GL/glew.h>
+#include <glm/glm.hpp>
 
 class Entity;
 class Engine;
@@ -11,7 +14,9 @@ class Engine;
 class Component
 {
 	friend Entity;
+	friend Engine;
 
+	std::weak_ptr<Engine> engine;
 	std::weak_ptr<Entity> entity;
 	virtual void onInit();
 	virtual void onBegin();
@@ -21,7 +26,6 @@ class Component
 public:
 	std::shared_ptr<Entity>getEntity();
 	std::shared_ptr<Engine>getEngine();
-
 };
 
 

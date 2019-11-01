@@ -17,7 +17,7 @@ int main()
 	std::shared_ptr<Triangle> tri = entity->addComponent<Triangle>();
 	
 	engine->start();
-	std::cout << "Update Finished" << std::endl;
-	system("PAUSE");
+ 	std::cout << "Update Finished" << std::endl;
+	
 	return 0;
 }

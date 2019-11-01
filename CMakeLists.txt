@@ -15,6 +15,11 @@ add_library(GameEngine
 	src/GameEngine/triangle.cpp
 	src/GameEngine/triangleRenderer.h
 	src/GameEngine/triangleRenderer.cpp
+	src/GameEngine/transform.cpp
+	src/GameEngine/transform.h
+	src/GameEngine/camera.cpp
+	src/GameEngine/camera.h
+
 )
 target_link_libraries(GameEngine SDL2 opengl32 glew32)
 

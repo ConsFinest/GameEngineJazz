@@ -1,4 +1,5 @@
 #include "triangleRenderer.h"
+#include "Exception.h"
 
 
 #define WINDOW_WIDTH 640
@@ -41,7 +42,7 @@ Triangle::Triangle()
 	
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		throw std::exception();
+		throw rend::Exception("SDL FAILED TO INITIALISE");
 	}
 
 	window = SDL_CreateWindow("Lab 4 - Architecture",
@@ -50,12 +51,12 @@ Triangle::Triangle()
 
 	if (!SDL_GL_CreateContext(window))
 	{
-		throw std::exception();
+		throw rend::Exception("OPENGL CONTEXT FAILED TO INITIALISE");
 	}
 
 	if (glewInit() != GLEW_OK)
 	{
-		throw std::exception();
+		throw rend::Exception("GLEW FAILED TO INITIALISE");
 	}
 
 	GLuint positionsVboId = 0;
@@ -65,7 +66,7 @@ Triangle::Triangle()
 
 	if (!positionsVboId)
 	{
-		throw std::exception();
+		throw rend::Exception("POSITIONS VBO FAILED");
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, positionsVboId);
@@ -83,7 +84,8 @@ Triangle::Triangle()
 
 	if (!colorsVboId)
 	{
-		throw std::exception();
+		throw rend::Exception("COLOURS VBO FAILED");
+
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, colorsVboId);
@@ -101,7 +103,8 @@ Triangle::Triangle()
 
 	if (!vaoId)
 	{
-		throw std::exception();
+		throw rend::Exception("VAO FAILED");
+
 	}
 
 	glBindVertexArray(vaoId);
@@ -128,7 +131,7 @@ Triangle::Triangle()
 
 	if (!success)
 	{
-		throw std::exception();
+		throw rend::Exception("VERTEX SHADER FAILED");
 	}
 
 	GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -138,7 +141,7 @@ Triangle::Triangle()
 
 	if (!success)
 	{
-		throw std::exception();
+		throw rend::Exception("FRAGMENT SHADER FAILED");
 	}
 
 	programId = glCreateProgram();
@@ -149,7 +152,7 @@ Triangle::Triangle()
 
 	if (glGetError() != GL_NO_ERROR)
 	{
-		throw std::exception();
+		throw rend::Exception("BIND ATTRIBUTE FAILED");
 	}
 
 	glLinkProgram(programId);
@@ -157,7 +160,7 @@ Triangle::Triangle()
 
 	if (!success)
 	{
-		throw std::exception();
+		throw rend::Exception("PROGRAM LINK FAILED");
 	}
 
 	glDetachShader(programId, vertexShaderId);

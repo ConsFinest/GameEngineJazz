@@ -2,14 +2,6 @@
 #define _TRIANGLERENDERER_H_
 
 #include "component.h"
-#include "Exception.h"
-
-#include <SDL2/SDL.h>
-#include <GL/glew.h>
-
-#include <exception>
-
-
 
 class Triangle: public Component
 {

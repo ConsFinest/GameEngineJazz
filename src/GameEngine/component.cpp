@@ -24,5 +24,5 @@ std::shared_ptr<Entity> Component::getEntity()
 
 std::shared_ptr<Engine> Component::getEngine()
 {
-	return std::shared_ptr<Engine>();
+	return engine.lock();
 }
