@@ -5,11 +5,11 @@
 #include "Texture.h"
 #include "RenderTexture.h"
 #include "TextureAdapter.h"
+#include "Mesh.h"
 
 #include <sr1/vector>
 
 #include <array>
-#include <iostream>
 
 namespace rend
 {
@@ -80,6 +80,11 @@ void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
 
 void Shader::render()
 {
+  glEnable(GL_DEPTH_TEST); pollForError();
+  glEnable(GL_CULL_FACE); pollForError();
+  glEnable(GL_BLEND); pollForError();
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); pollForError();
+
   glUseProgram(id); pollForError();
 
   int activeTexture = 0;
@@ -124,7 +129,7 @@ void Shader::render()
       if((*it)->type == GL_FLOAT) size = 1;
       else if((*it)->type == GL_FLOAT_VEC2) size = 2;
       else if((*it)->type == GL_FLOAT_VEC3) size = 3;
-	  else if ((*it)->type == GL_FLOAT_VEC4) size = 4;
+      else if((*it)->type == GL_FLOAT_VEC4) size = 4;
       else throw Exception("Invalid buffer type");
 
       glBindBuffer(GL_ARRAY_BUFFER, (*it)->bufferVal->getId()); pollForError();
@@ -146,9 +151,18 @@ void Shader::render()
     }
   }
 
+  if(vertices == -1)
+  {
+    throw Exception("No vertices were submitted for drawing");
+  }
+
   glDrawArrays(GL_TRIANGLES, 0, vertices); pollForError();
 
   glUseProgram(0); pollForError();
+
+  glDisable(GL_BLEND); pollForError();
+  glDisable(GL_CULL_FACE); pollForError();
+  glDisable(GL_DEPTH_TEST); pollForError();
 }
 
 void Shader::setSampler(const std::string& variable, const std::sr1::shared_ptr<TextureAdapter>& value)
@@ -191,6 +205,21 @@ void Shader::setAttribute(const std::string& variable, const std::sr1::shared_pt
 {
   std::sr1::shared_ptr<VariableInfo> vi = getVariableInfo(variable, value->type, true);
   vi->bufferVal = value;
+}
+
+void Shader::setMesh(const std::sr1::shared_ptr<Mesh>& value)
+{
+  for(std::sr1::vector<std::sr1::shared_ptr<BufferData> >::iterator it =
+    value->buffers.begin(); it != value->buffers.end(); it++)
+  {
+    setAttribute((*it)->name, (*it)->buffer);
+  }
+
+  for(std::sr1::vector<std::sr1::shared_ptr<TextureData> >::iterator it =
+    value->textures.begin(); it != value->textures.end(); it++)
+  {
+    setSampler((*it)->name, (*it)->texture);
+  }
 }
 
 std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& name, GLenum type, bool attrib)
@@ -252,10 +281,9 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
     glGetActiveAttrib(id, rtn->loc, 0, &unusedA, &unusedB, &rtnType, NULL);
     pollForError();
 
-   /*if(rtnType != type)
+   /* if(rtnType != type)
     {
-	   std::cout << "The requested attribute had the wrong type: " << VariableInfo::convertType(type) << " " << VariableInfo::convertType(rtnType) << std::endl;
-      throw Exception("The requested attribute had the wrong type: " + VariableInfo::convertType(type) + " " + VariableInfo::convertType(rtnType));
+      throw Exception("The requested attribute had the wrong type");
     }*/
   }
 
@@ -265,6 +293,11 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
 }
 
 void Shader::setSource(const std::string& source)
+{
+  parse(source);
+}
+
+void Shader::parse(const std::string& source)
 {
   GLuint vertId = 0;
   GLuint fragId = 0;

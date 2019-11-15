@@ -2,10 +2,10 @@
 #define _TRIANGLERENDERER_H_
 
 #include "component.h"
+#include <rend/rend.h>
 
 class Triangle: public Component
 {
-	SDL_Window *window;
 	GLuint programId;
 	GLuint vaoId;
 

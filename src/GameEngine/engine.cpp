@@ -2,10 +2,36 @@
 #include "entity.h"
 
 
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 480
+
+Engine::~Engine()
+{
+	SDL_DestroyWindow(window);
+	SDL_Quit();
+}
+
 std::shared_ptr<Engine> Engine::intialize()
 {
 	std::shared_ptr<Engine>eng = std::make_shared<Engine>();
 	eng->self = eng;
+
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		throw rend::Exception("SDL FAILED TO INITIALISE");
+	}
+
+	eng->window = SDL_CreateWindow("Lab 4 - Architecture",
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+
+	if (!SDL_GL_CreateContext(eng->window))
+	{
+		throw rend::Exception("OPENGL CONTEXT FAILED TO INITIALISE");
+	}
+
+	eng->context = rend::Context::initialize();
+
 	return eng;
 }
 
@@ -42,6 +68,7 @@ void Engine::start()
 			(*it)->display();
 			std::cout << "Entity Drawns" << std::endl;
 		}
+		SDL_GL_SwapWindow(window);
 	}
 
 }
@@ -49,6 +76,11 @@ void Engine::start()
 void Engine::stop()
 {
 	running = false;
+}
+
+std::sr1::shared_ptr<rend::Context> Engine::getContext()
+{
+	return std::sr1::shared_ptr<rend::Context>();
 }
 
 

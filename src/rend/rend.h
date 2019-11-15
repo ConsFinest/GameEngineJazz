@@ -7,6 +7,8 @@
 #include "Shader.h"
 #include "Buffer.h"
 #include "Exception.h"
+#include "Mesh.h"
+#include "Util.h"
 #include "mathutil.h"
 
 #endif

@@ -10,6 +10,7 @@ int main()
 {
 
 	std::shared_ptr<Engine> engine = Engine::intialize();
+	
 	std::cout << "ENGINE JAZZ HELLO" << std::endl;
 	
 	std::shared_ptr<Entity> entity = engine->addEntity();

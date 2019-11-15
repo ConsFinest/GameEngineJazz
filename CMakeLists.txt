@@ -3,7 +3,23 @@ project(ENGINEJAZZ)
 
 include_directories(src contrib)
 
-add_definitions(-DSTD_SR1_DEBUG)
+#add_definitions(-DSTD_SR1_DEBUG)
+
+add_library(rend
+  	src/rend/Exception.cpp
+  	src/rend/Context.cpp
+  	src/rend/Texture.cpp
+  	src/rend/RenderTexture.cpp
+  	src/rend/Shader.cpp
+  	src/rend/Buffer.cpp
+  	src/rend/Mesh.cpp
+  	src/rend/Util.cpp
+)
+if(MSVC)
+  target_link_libraries(rend glew32 opengl32)
+else()
+  target_link_libraries(rend GLEW GL)
+endif()
 
 add_library(GameEngine
 	src/GameEngine/engine.cpp
@@ -12,8 +28,6 @@ add_library(GameEngine
 	src/GameEngine/entity.h
 	src/GameEngine/component.cpp
 	src/GameEngine/component.h
-	src/GameEngine/Exception.cpp
-	src/GameEngine/Exception.h
 	src/GameEngine/triangle.cpp
 	src/GameEngine/triangleRenderer.h
 	src/GameEngine/triangleRenderer.cpp
@@ -21,19 +35,9 @@ add_library(GameEngine
 	src/GameEngine/transform.h
 	src/GameEngine/camera.cpp
 	src/GameEngine/camera.h
-  	src/GameEngine/Context.cpp
-  	src/GameEngine/Texture.cpp
-  	src/GameEngine/RenderTexture.cpp
-  	src/GameEngine/Shader.cpp
-  	src/GameEngine/Buffer.cpp
-	src/GameEngine/Context.h
-  	src/GameEngine/Texture.h
-  	src/GameEngine/RenderTexture.h
-  	src/GameEngine/Shader.h
-  	src/GameEngine/Buffer.h
 
 )
-target_link_libraries(GameEngine SDL2 opengl32 glew32)
+target_link_libraries(GameEngine SDL2 rend)
 
 add_executable(Game
 	src/Game/main.cpp

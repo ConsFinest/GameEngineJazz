@@ -1,7 +1,7 @@
 #ifndef _ENTITY_H_
 #define _ENTITY_H_
 
-#include "Exception.h"
+#include <rend/rend.h>
 #include <iostream>
 #include <memory>
 #include <vector>
