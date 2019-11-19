@@ -90,30 +90,33 @@ std::sr1::shared_ptr<rend::Shader> Engine::createShader(const std::string & sour
 	return shader;
 }
 
-std::sr1::shared_ptr<rend::Mesh> Engine::createMesh(char *_loc)
+std::sr1::shared_ptr<rend::Mesh> Engine::createMesh(const std::string _loc)
 {
-	std::ifstream f(_loc);
 	std::sr1::shared_ptr<rend::Mesh> shape = context->createMesh();
-	if (!f.is_open())
 	{
-		throw rend::Exception("Failed to open model");
+		std::ifstream f(_loc.c_str());
+		if (!f.is_open())
+		{
+			std::cout << _loc << std::endl;
+			throw rend::Exception("Failed to open model");
+		}
+
+		std::string obj;
+		std::string line;
+
+		while (!f.eof())
+		{
+			std::getline(f, line);
+			obj += line + "\n";
+		}
+
+		shape->parse(obj);
 	}
-
-	std::string obj;
-	std::string line;
-
-	while (!f.eof())
-	{
-		std::getline(f, line);
-		obj += line + "\n";
-	}
-
-	shape->parse(obj);
 	return shape;
 
 }
 
-std::sr1::shared_ptr<rend::Texture> Engine::createTexture(const char *_loc)
+std::sr1::shared_ptr<rend::Texture> Engine::createTexture(const std::string _loc)
 {
 	std::sr1::shared_ptr<rend::Texture> texture = context->createTexture();
 	{
@@ -121,7 +124,7 @@ std::sr1::shared_ptr<rend::Texture> Engine::createTexture(const char *_loc)
 		int h = 0;
 		int bpp = 0;
 
-		unsigned char *data = stbi_load(_loc,
+		unsigned char *data = stbi_load(_loc.c_str(),
 			&w, &h, &bpp, 3);
 
 		if (!data)
