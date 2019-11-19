@@ -57,21 +57,24 @@ int main()
 	
 	std::sr1::shared_ptr<rend::Shader> shader = engine->createShader(src);
 
-	std::sr1::shared_ptr<rend::Mesh> shape = engine->createMesh("GameEngineJazz/samples/graveyard/graveyard.obj");
+	std::sr1::shared_ptr<rend::Mesh> shape = engine->createMesh("../samples/graveyard/graveyard.obj");
 
-	std::sr1::shared_ptr<rend::Texture> texture = engine->createTexture("GameEngineJazz/samples/graveyard/graveyard.png");
+	std::sr1::shared_ptr<rend::Texture> texture = engine->createTexture("../samples/graveyard/graveyard.png");
 
 	shape->setTexture("u_Texture", texture);
 
 
+
+
+	engine->start();
+	std::cout << "Update Finished" << std::endl;
 	//std::cout << "ENGINE JAZZ HELLO" << std::endl;
 	
 	//std::shared_ptr<Entity> entity = engine->addEntity();
 
 	//std::shared_ptr<Triangle> tri = entity->addComponent<Triangle>();
 	
-	engine->start();
- 	std::cout << "Update Finished" << std::endl;
+	
 	
 	return 0;
 }
