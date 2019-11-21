@@ -28,15 +28,13 @@ public:
 	void start();
 	void stop();
 	std::sr1::shared_ptr<rend::Context> getContext();
-	std::sr1::shared_ptr<rend::Shader> createShader(const std::string &source);
-	std::sr1::shared_ptr<rend::Mesh> createMesh(const std::string _loc);
-	std::sr1::shared_ptr<rend::Texture> createTexture(const std::string _loc);
+	std::sr1::shared_ptr<rend::Context> context;
 
 private: 
 	std::vector<std::shared_ptr<Entity>> entities;
 	bool running;
 	SDL_Window *window;
-	std::sr1::shared_ptr<rend::Context> context;
+	
 };
 
 

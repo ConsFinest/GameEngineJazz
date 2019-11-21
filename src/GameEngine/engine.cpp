@@ -61,12 +61,10 @@ void Engine::start()
 		for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
 		{
 			(*it)->tick();
-			std::cout << "Entity updated" << std::endl;
 		}
 		for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
 		{
 			(*it)->display();
-			std::cout << "Entity Drawns" << std::endl;
 		}
 		SDL_GL_SwapWindow(window);
 	}
@@ -83,73 +81,6 @@ std::sr1::shared_ptr<rend::Context> Engine::getContext()
 	return std::sr1::shared_ptr<rend::Context>();
 }
 
-std::sr1::shared_ptr<rend::Shader> Engine::createShader(const std::string & source)
-{
-	std::sr1::shared_ptr<rend::Shader> shader = context->createShader();
-	shader->parse(source);
-	return shader;
-}
 
-std::sr1::shared_ptr<rend::Mesh> Engine::createMesh(const std::string _loc)
-{
-	std::sr1::shared_ptr<rend::Mesh> shape = context->createMesh();
-	{
-		std::ifstream f(_loc.c_str());
-		if (!f.is_open())
-		{
-			std::cout << _loc << std::endl;
-			throw rend::Exception("Failed to open model");
-		}
-
-		std::string obj;
-		std::string line;
-
-		while (!f.eof())
-		{
-			std::getline(f, line);
-			obj += line + "\n";
-		}
-
-		shape->parse(obj);
-	}
-	return shape;
-
-}
-
-std::sr1::shared_ptr<rend::Texture> Engine::createTexture(const std::string _loc)
-{
-	std::sr1::shared_ptr<rend::Texture> texture = context->createTexture();
-	{
-		int w = 0;
-		int h = 0;
-		int bpp = 0;
-
-		unsigned char *data = stbi_load(_loc.c_str(),
-			&w, &h, &bpp, 3);
-
-		if (!data)
-		{
-			throw rend::Exception("Failed to open image");
-		}
-
-		texture->setSize(w, h);
-
-		for (int y = 0; y < h; y++)
-		{
-			for (int x = 0; x < w; x++)
-			{
-				int r = y * w * 3 + x * 3;
-
-				texture->setPixel(x, y, glm::vec3(
-					data[r] / 255.0f,
-					data[r + 1] / 255.0f,
-					data[r + 2] / 255.0f));
-			}
-		}
-
-		stbi_image_free(data);
-	}
-	return texture;
-}
 
 

@@ -28,9 +28,8 @@ add_library(GameEngine
 	src/GameEngine/entity.h
 	src/GameEngine/component.cpp
 	src/GameEngine/component.h
-	src/GameEngine/triangle.cpp
-	src/GameEngine/triangleRenderer.h
-	src/GameEngine/triangleRenderer.cpp
+	src/GameEngine/renderer.h
+	src/GameEngine/renderer.cpp
 	src/GameEngine/transform.cpp
 	src/GameEngine/transform.h
 	src/GameEngine/camera.cpp

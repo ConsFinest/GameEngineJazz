@@ -2,10 +2,11 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
+
 #include <GameEngine/engine.h>
 #include <GameEngine/component.h>
 #include <GameEngine/entity.h>
-#include <GameEngine/triangleRenderer.h>
+#include <GameEngine/renderer.h>
 #include <memory>
 
 
@@ -54,27 +55,13 @@ int main()
 {
 
 	std::shared_ptr<Engine> engine = Engine::intialize();
-	
-	std::sr1::shared_ptr<rend::Shader> shader = engine->createShader(src);
-
-	std::sr1::shared_ptr<rend::Mesh> shape = engine->createMesh("../samples/graveyard/graveyard.obj");
-
-	std::sr1::shared_ptr<rend::Texture> texture = engine->createTexture("../samples/graveyard/graveyard.png");
-
-	shape->setTexture("u_Texture", texture);
-
-
-
-
+	std::shared_ptr<Entity> entity = engine->addEntity();
+	std::shared_ptr<Renderer> rend = entity->addComponent<Renderer>();
+	rend->createShader(src);
+	rend->createMesh("../samples/graveyard/graveyard.obj");
+	rend->createTexture("../samples/graveyard/graveyard.png");
+	rend->setTextToMesh();
 	engine->start();
 	std::cout << "Update Finished" << std::endl;
-	//std::cout << "ENGINE JAZZ HELLO" << std::endl;
-	
-	//std::shared_ptr<Entity> entity = engine->addEntity();
-
-	//std::shared_ptr<Triangle> tri = entity->addComponent<Triangle>();
-	
-	
-	
 	return 0;
 }
