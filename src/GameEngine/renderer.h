@@ -18,8 +18,10 @@ public:
 	~Renderer();
 	void setTextToMesh();
 	std::sr1::shared_ptr<rend::Shader> createShader(const std::string &source);
+	std::sr1::shared_ptr<rend::Shader> createShaderFF(const std::string _loc);
 	std::sr1::shared_ptr<rend::Mesh> createMesh(const std::string _loc);
 	std::sr1::shared_ptr<rend::Texture> createTexture(const std::string _loc);
+	void rendererInit(const std::string &source, const std::string _mesh, const std::string _text);
 	float angle = 0;
 	
 

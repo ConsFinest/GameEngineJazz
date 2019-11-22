@@ -1,12 +1,14 @@
 #include "engine.h"
 #include "entity.h"
 
-
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
 Engine::~Engine()
 {
+	alcMakeContextCurrent(NULL);
+	alcDestroyContext(ALcontext);
+	alcCloseDevice(device);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
@@ -30,6 +32,26 @@ std::shared_ptr<Engine> Engine::intialize()
 		throw rend::Exception("OPENGL CONTEXT FAILED TO INITIALISE");
 	}
 
+	//ALCcreation
+
+	eng->device = alcOpenDevice(NULL);
+	if (eng->device == NULL)
+	{
+		throw rend::Exception("OPENAL FAILED TO INITIALISE");
+	}
+	eng->ALcontext = alcCreateContext(eng->device, NULL);
+	if (eng->ALcontext == NULL)
+	{
+		alcCloseDevice(eng->device);
+		throw rend::Exception("ALCONTEXT FAILED TO INITIALISE");
+	}
+	if (!alcMakeContextCurrent(eng->ALcontext))
+	{
+		alcDestroyContext(eng->ALcontext);
+		alcCloseDevice(eng->device);
+		throw rend::Exception("CONTEXT NOT MADE CURRENT");
+	}
+	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
 	eng->context = rend::Context::initialize();
 
 	return eng;

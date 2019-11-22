@@ -16,7 +16,7 @@ add_library(rend
   	src/rend/Util.cpp
 )
 if(MSVC)
-  target_link_libraries(rend glew32 opengl32)
+  target_link_libraries(rend glew32 opengl32 OpenAl32)
 else()
   target_link_libraries(rend GLEW GL)
 endif()
@@ -34,9 +34,11 @@ add_library(GameEngine
 	src/GameEngine/transform.h
 	src/GameEngine/camera.cpp
 	src/GameEngine/camera.h
+	src/GameEngine/audioSource.h
+	src/GameEngine/audioSource.cpp
 
 )
-target_link_libraries(GameEngine SDL2 rend)
+target_link_libraries(GameEngine SDL2 rend OpenAl32)
 
 add_executable(Game
 	src/Game/main.cpp

@@ -28,6 +28,34 @@ std::sr1::shared_ptr<rend::Shader> Renderer::createShader(const std::string & so
 	return shader;
 }
 
+std::sr1::shared_ptr<rend::Shader> Renderer::createShaderFF(const std::string _loc)
+{
+	std::sr1::shared_ptr<Engine> eng = getEngine();
+	shader = eng->context->createShader();
+	{
+		std::fstream f(_loc.c_str());
+
+		if (!f.is_open())
+		{
+			std::cout << _loc << std::endl;
+			throw rend::Exception("Failed to open shaderfile");
+		}
+
+		std::string obj;
+		std::string line;
+
+		while (!f.eof())
+		{
+			std::getline(f, line);
+			obj += line + "\n";
+		}
+
+		shader->parse(obj);
+	}
+	return shader;
+
+}
+
 std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
@@ -68,7 +96,7 @@ std::sr1::shared_ptr<rend::Texture> Renderer::createTexture(const std::string _l
 
 		if (!data)
 		{
-			throw rend::Exception("Failed to open image");
+			throw rend::Exception("Failed to open texture");
 		}
 
 		texture->setSize(w, h);
@@ -89,6 +117,14 @@ std::sr1::shared_ptr<rend::Texture> Renderer::createTexture(const std::string _l
 		stbi_image_free(data);
 	}
 	return texture;
+}
+
+void Renderer::rendererInit(const std::string & source, const std::string _mesh, const std::string _text)
+{
+	shader = createShaderFF(source);
+	mesh = createMesh(_mesh);
+	texture = createTexture(_text);
+	mesh->setTexture("u_Texture", texture);
 }
 
 void Renderer::onDisplay()

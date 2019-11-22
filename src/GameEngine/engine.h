@@ -9,9 +9,12 @@
 #include <rend/rend.h>
 #include <fstream>
 
+
+
 #include <stb_image/stb_image.h>
 
 #include "component.h"
+#include "audioSource.h"
 
 
 class Entity; //forward declare
@@ -34,6 +37,8 @@ private:
 	std::vector<std::shared_ptr<Entity>> entities;
 	bool running;
 	SDL_Window *window;
+	ALCdevice* device;
+	ALCcontext* ALcontext;
 	
 };
 
