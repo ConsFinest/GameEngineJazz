@@ -7,6 +7,7 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 class Entity;
 class Engine;
@@ -15,7 +16,7 @@ class Component
 {
 	friend Entity;
 	friend Engine;
-
+	
 	std::weak_ptr<Engine> engine;
 	std::weak_ptr<Entity> entity;
 	virtual void onInit();
