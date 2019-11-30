@@ -15,6 +15,9 @@
 
 #include "component.h"
 #include "audioSource.h"
+#include "camera.h"
+#include "transform.h"
+#include "entity.h"
 
 
 class Entity; //forward declare

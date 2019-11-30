@@ -36,6 +36,8 @@ add_library(GameEngine
 	src/GameEngine/camera.h
 	src/GameEngine/audioSource.h
 	src/GameEngine/audioSource.cpp
+	src/GameEngine/PBR.h
+	src/GameEngine/PBR.cpp
 
 )
 target_link_libraries(GameEngine SDL2 rend OpenAl32)

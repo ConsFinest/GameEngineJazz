@@ -1,11 +1,11 @@
-#ifndef _RENDERER_H_
-#define _RENDERER_H_
+#ifndef  _PBR_H_
+#define _PBR_H_
 
 #include "component.h"
 #include <rend/rend.h>
 #include "engine.h"
 
-class Renderer: public Component
+class PBR : public Component
 {
 	GLuint programId;
 	GLuint vaoId;
@@ -15,8 +15,8 @@ class Renderer: public Component
 	std::shared_ptr<Camera> camera;
 
 public:
-	Renderer();
-	~Renderer();
+	PBR();
+	~PBR();
 	void setTextToMesh();
 	std::sr1::shared_ptr<rend::Shader> createShader(const std::string &source);
 	std::sr1::shared_ptr<rend::Shader> createShaderFF(const std::string _loc);
@@ -25,7 +25,7 @@ public:
 	std::shared_ptr<Camera> setCamera(std::shared_ptr<Camera> _cam);
 	void rendererInit(const std::string &source, const std::string _mesh, const std::string _text);
 	float angle = 0;
-	
+
 
 	virtual void onDisplay();
 };
@@ -35,4 +35,5 @@ public:
 
 
 
-#endif // !_TRIANGLERENDERER_H_
+
+#endif // ! _PBR_H_

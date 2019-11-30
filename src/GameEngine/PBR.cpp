@@ -1,26 +1,25 @@
-#include "renderer.h"
-
+#include "PBR.h"
 
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
 
-Renderer::Renderer()
+PBR::PBR()
 {
-	
+
 }
 
-Renderer::~Renderer()
+PBR::~PBR()
 {
-	
+
 }
 
-void Renderer::setTextToMesh()
+void PBR::setTextToMesh()
 {
 	mesh->setTexture("u_Texture", texture);
 }
 
-std::sr1::shared_ptr<rend::Shader> Renderer::createShader(const std::string & source)
+std::sr1::shared_ptr<rend::Shader> PBR::createShader(const std::string & source)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
 	shader = eng->context->createShader();
@@ -28,7 +27,7 @@ std::sr1::shared_ptr<rend::Shader> Renderer::createShader(const std::string & so
 	return shader;
 }
 
-std::sr1::shared_ptr<rend::Shader> Renderer::createShaderFF(const std::string _loc)
+std::sr1::shared_ptr<rend::Shader> PBR::createShaderFF(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
 	shader = eng->context->createShader();
@@ -56,7 +55,7 @@ std::sr1::shared_ptr<rend::Shader> Renderer::createShaderFF(const std::string _l
 
 }
 
-std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc)
+std::sr1::shared_ptr<rend::Mesh> PBR::createMesh(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
 	mesh = eng->context->createMesh();
@@ -82,7 +81,7 @@ std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc)
 	return mesh;
 }
 
-std::sr1::shared_ptr<rend::Texture> Renderer::createTexture(const std::string _loc)
+std::sr1::shared_ptr<rend::Texture> PBR::createTexture(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
 	texture = eng->context->createTexture();
@@ -119,13 +118,13 @@ std::sr1::shared_ptr<rend::Texture> Renderer::createTexture(const std::string _l
 	return texture;
 }
 
-std::shared_ptr<Camera> Renderer::setCamera(std::shared_ptr<Camera> _cam)
+std::shared_ptr<Camera> PBR::setCamera(std::shared_ptr<Camera> _cam)
 {
 	camera = _cam;
 	return camera;
 }
 
-void Renderer::rendererInit(const std::string & source, const std::string _mesh, const std::string _text)
+void PBR::rendererInit(const std::string & source, const std::string _mesh, const std::string _text)
 {
 	shader = createShaderFF(source);
 	mesh = createMesh(_mesh);
@@ -133,20 +132,20 @@ void Renderer::rendererInit(const std::string & source, const std::string _mesh,
 	mesh->setTexture("u_Texture", texture);
 }
 
-void Renderer::onDisplay()
+void PBR::onDisplay()
 {
-	    std::sr1::shared_ptr<Entity> ent = getEntity();
-		std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
-		std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
-		//transform->addTrans(glm::vec3(0, 50, 0));
-		glClearColor(0.10f, 0.15f, 0.25f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-		shader->setUniform("u_Projection", camera->getProj());
-		//shader->setUniform("u_Projection", camera->getProj());
-		//shader->setUniform("u_View", camera->getView());
-		shader->setUniform("u_Model", transform->getModel());
-			
-		shader->setMesh(mesh);
-		shader->render();
+	std::sr1::shared_ptr<Entity> ent = getEntity();
+	std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
+	std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
+	//transform->addTrans(glm::vec3(0, 50, 0));
+	glClearColor(0.10f, 0.15f, 0.25f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	shader->setUniform("u_Projection", camera->getProj());
+	//shader->setUniform("u_Projection", camera->getProj());
+	//shader->setUniform("u_View", camera->getView());
+	shader->setUniform("u_Model", transform->getModel());
+
+	shader->setMesh(mesh);
+	shader->render();
 
 }

@@ -59,7 +59,7 @@ public:
 	}
 
 	template<class T>
-	std::shared_ptr<T>GetComponent()
+	std::shared_ptr<T>getComponent()
 	{
 		for (auto it = components.begin(); it != components.end(); it++)
 		{

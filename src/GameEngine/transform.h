@@ -20,7 +20,7 @@ public:
 	glm::vec3 getRot();
 	glm::vec3 getPos();
 	glm::vec3 getScale();
-	glm::mat4 getModel();
+	glm::mat4 getModel(); //Matrix Model
 
 	void addRot(glm::vec3 _rot);
 	void addTrans(glm::vec3 _trans);
