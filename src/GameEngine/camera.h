@@ -2,15 +2,16 @@
 #define _CAMERA_H_
 
 #include "component.h"
+#include "engine.h"
 
 class Camera : public Component
 {
-	glm::mat4 pos;
+	glm::vec3 camPos;
 	glm::mat4 viewMat;
 	glm::mat4 projMat;
 	float angle;
 public:
-
+	glm::vec3 getPos();
 	glm::mat4 getView();
 	glm::mat4 getProj();
 	void cameraInit(float _angle);

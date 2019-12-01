@@ -13,6 +13,11 @@ class Renderer: public Component
 	std::sr1::shared_ptr<rend::Texture> texture;
 	std::sr1::shared_ptr<rend::Shader> shader;
 	std::shared_ptr<Camera> camera;
+	bool pbr;
+	glm::vec3 albedo;
+	float metallic;
+	float roughness;
+	float ao; //Ambeient Occlusion
 
 public:
 	Renderer();
@@ -24,6 +29,8 @@ public:
 	std::sr1::shared_ptr<rend::Texture> createTexture(const std::string _loc);
 	std::shared_ptr<Camera> setCamera(std::shared_ptr<Camera> _cam);
 	void rendererInit(const std::string &source, const std::string _mesh, const std::string _text);
+	void rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text);
+
 	float angle = 0;
 	
 

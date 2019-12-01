@@ -131,16 +131,48 @@ void Renderer::rendererInit(const std::string & source, const std::string _mesh,
 	mesh = createMesh(_mesh);
 	texture = createTexture(_text);
 	mesh->setTexture("u_Texture", texture);
+	pbr = false;
+}
+
+void Renderer::rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text)
+{
+	shader = createShaderFF(source);
+	mesh = createMesh(_mesh);
+	texture = createTexture(_text);
+	mesh->setTexture("u_Texture", texture);
+	albedo = glm::vec3(0.5, 0.5,0.5);
+	metallic = 1;
+	roughness = 1.0f;
+	ao = 1.0f;
+	pbr = true;
 }
 
 void Renderer::onDisplay()
 {
+		
 	    std::sr1::shared_ptr<Entity> ent = getEntity();
 		std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
-		std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
-		//transform->addTrans(glm::vec3(0, 50, 0));
 		glClearColor(0.10f, 0.15f, 0.25f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
+		shader->setUniform("u_LightPos", glm::vec3(0,5,5));
+		if (pbr == false)
+		{
+			shader->setUniform("u_Emissive", glm::vec3(0, 10, 0));
+			shader->setUniform("u_Ambient", glm::vec3(0.4, 0.4, 0.4));
+		}
+		if (pbr == true)
+		{
+			shader->setUniform("u_Roughness", roughness);
+			shader->setUniform("u_CamPos", camera->getPos());
+			shader->setUniform("u_LightColor", glm::vec3(300.0f, 300.0f, 300.0f));
+			shader->setUniform("u_Ao", ao);
+			shader->setUniform("u_Metallic", metallic);
+			shader->setUniform("u_Albedo", albedo);
+		}
+		//transform->addTrans(glm::vec3(0, 50, 0));
+		
+		shader->setUniform("u_View", glm::inverse(camera->getView()));
 		shader->setUniform("u_Projection", camera->getProj());
 		//shader->setUniform("u_Projection", camera->getProj());
 		//shader->setUniform("u_View", camera->getView());

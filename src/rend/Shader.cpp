@@ -262,9 +262,9 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
     glGetActiveUniform(id, rtn->loc, 0, &unusedA, &unusedB, &rtnType, NULL);
     pollForError();
 
-    if(rtnType != type)
-    {
-      throw Exception("The requested uniform [" + name + "] had the wrong type [" +
+   if(rtnType != type)
+   {
+    throw Exception("The requested uniform [" + name + "] had the wrong type [" +
         VariableInfo::convertType(rtn->type) + "]");
     }
   }
@@ -338,6 +338,7 @@ void Shader::parse(const std::string& source)
     pollForError();
 
     std::string msg = &infoLog.at(0);
+	std::cout << msg << std::endl;
     throw Exception(msg);
   }
 
@@ -373,6 +374,7 @@ void Shader::parse(const std::string& source)
     pollForError();
 
     std::string msg = &infoLog.at(0);
+	std::cout << msg << std::endl;
     throw Exception(msg);
   }
 
