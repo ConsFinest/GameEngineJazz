@@ -2,8 +2,8 @@
 
 
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH 1024		
+#define WINDOW_HEIGHT 760
 
 Renderer::Renderer()
 {
@@ -168,7 +168,7 @@ void Renderer::onDisplay()
 		glClearColor(0.10f, 0.15f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
-		shader->setUniform("u_LightPos", glm::vec3(0,5,5));
+		shader->setUniform("u_LightPos", glm::vec3(0,0,5));
 		if (pbr == false)
 		{
 			shader->setUniform("u_Emissive", glm::vec3(0, 10, 0));
