@@ -134,16 +134,29 @@ void Renderer::rendererInit(const std::string & source, const std::string _mesh,
 	pbr = false;
 }
 
-void Renderer::rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text)
+void Renderer::rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text, const std::string _alb, const std::string _norm, const std::string _met, const std::string _rough, const std::string _ao)
 {
 	shader = createShaderFF(source);
 	mesh = createMesh(_mesh);
 	texture = createTexture(_text);
+	albedoMap = createTexture(_alb);
+	normalMap = createTexture(_norm);
+	metallicMap = createTexture(_met);
+	roughnessMap = createTexture(_rough);
+	aoMap = createTexture(_ao);
 	mesh->setTexture("u_Texture", texture);
-	albedo = glm::vec3(0.5, 0.5,0.5);
-	metallic = 1;
-	roughness = 1.0f;
-	ao = 1.0f;
+	
+
+	mesh->setTexture("u_AlbedoMap", albedoMap);
+	mesh->setTexture("u_NormalMap", normalMap);
+	mesh->setTexture("u_MetallicMap", metallicMap);
+	mesh->setTexture("u_RoughnessMap", roughnessMap);
+	mesh->setTexture("u_AoMap", albedoMap);
+
+	//albedo = glm::vec3(0.5, 0.5,0.5);
+	//metallic = 1;
+	//roughness = 1.0f;
+	//ao = 1.0f;
 	pbr = true;
 }
 
@@ -163,12 +176,13 @@ void Renderer::onDisplay()
 		}
 		if (pbr == true)
 		{
-			shader->setUniform("u_Roughness", roughness);
+			//shader->setUniform("u_Roughness", roughness);
 			shader->setUniform("u_CamPos", camera->getPos());
 			shader->setUniform("u_LightColor", glm::vec3(300.0f, 300.0f, 300.0f));
-			shader->setUniform("u_Ao", ao);
-			shader->setUniform("u_Metallic", metallic);
-			shader->setUniform("u_Albedo", albedo);
+
+			//shader->setUniform("u_Ao", ao);
+			//shader->setUniform("u_Metallic", metallic);
+			//shader->setUniform("u_Albedo", albedo);
 		}
 		//transform->addTrans(glm::vec3(0, 50, 0));
 		
