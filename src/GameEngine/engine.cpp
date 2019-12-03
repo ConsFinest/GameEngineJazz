@@ -70,8 +70,11 @@ std::shared_ptr<Entity> Engine::addEntity()
 void Engine::start()
 {
 	running = true;
+
 	while (running)
 	{
+		glClearColor(0.10f, 0.15f, 0.25f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		SDL_Event event = { 0 };
 		while (SDL_PollEvent(&event))
 		{
