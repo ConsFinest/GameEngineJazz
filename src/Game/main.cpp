@@ -38,8 +38,8 @@ int main()
 
 	//rend->rendererInit("../shader/Shader.txt", "../samples/graveyard/graveyard.obj", "../samples/graveyard/graveyard.png");
 	rend->rendererInitPBR("../shader/PBRshader.txt", "../samples/PBRsphere/pbrSphere.obj", "../samples/PBRsphere/basecolor.png","../samples/PBRsphere/basecolor.png", "../samples/PBRsphere/normal.png", "../samples/PBRsphere/metallic.png", "../samples/PBRsphere/roughness.png", "../samples/PBRsphere/grey.png");
-	rend1->rendererInitPBR("../shader/PBRshader.txt", "../samples/PBRsphere/pbrSphere.obj", "../samples/PBRsphere/basecolor.png", "../samples/PBRsphere/basecolor.png", "../samples/PBRsphere/normal.png", "../samples/PBRsphere/metallic.png", "../samples/PBRsphere/roughness.png", "../samples/PBRsphere/grey.png");
-
+	//rend1->rendererInitPBR("../shader/PBRshader.txt", "../samples/PBRsphere/pbrSphere.obj", "../samples/PBRsphere/basecolor.png", "../samples/PBRsphere/basecolor.png", "../samples/PBRsphere/normal.png", "../samples/PBRsphere/metallic.png", "../samples/PBRsphere/roughness.png", "../samples/PBRsphere/grey.png");
+	rend1->convertToCubeMap("../shader/shader.txt", "../samples/Mono_Lake_C/cube.obj", "../samples/Mono_Lake_C/Mono_Lake_C_Env.hdr");
 	//rend->rendererInitPBR("../shader/PBRshader.txt", "../samples/graveyard/graveyard.obj", "../samples/graveyard/graveyard.png");
 
 

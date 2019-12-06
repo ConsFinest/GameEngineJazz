@@ -234,7 +234,7 @@ std::sr1::shared_ptr<VariableInfo> Shader::getVariableInfo(const std::string& na
         throw Exception("Variable [" + name + "] requested as wrong type [" +
           VariableInfo::convertType((*it)->type));
       }
-
+		
       return *it;
     }
   }

@@ -1,21 +1,24 @@
 #ifdef VERTEX                                 
                                               
-attribute vec3 a_Position;                                          
+attribute vec3 a_Position;
+                                         
                                               
 uniform mat4 u_Projection;                     
 uniform mat4 u_View;                       
                                               
-varying vec3 v_FragPos;                      
+varying vec3 v_FragPos; 
+                    
                                               
 void main()                                   
 {    
 	v_FragPos = a_Position;
-	gl_Position = u_Projection * view * vec4(v_FragPos, 1.0);                  
+	gl_Position = u_Projection * u_View * vec4(v_FragPos, 1.0);
+	                   
 }                                             
                                               
 #endif                                        
 #ifdef FRAGMENT                               
-                                              
+                                            
 varying vec3 v_FragPos;
 
 uniform sampler2D equirectangularMap;
@@ -30,10 +33,11 @@ vec2 SampleSphericalMap(vec3 v)
 }                    
                                               
 void main()                                   
-{           
+{          
+	 
 	vec2 uv = SampleSphericalMap(normalize(v_FragPos));
-	vec3 color = texture(equirectangularMap, uv).rgb;
-
+	
+	vec3 color = texture2D(equirectangularMap, uv).rgb; 
 	gl_FragColor = vec4(color, 1.0);
 }                                             
                                               

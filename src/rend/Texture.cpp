@@ -17,9 +17,29 @@ GLuint Texture::getTexId()
   return getId();
 }
 
+bool Texture::ifSkybox()
+{
+	return skyBox;
+}
+
+void Texture::setSkyTrue()
+{
+	skyBox = true;
+}
+
+bool Texture::ifCube()
+{
+	return cube;
+}
+
+void Texture::setCubeTrue()
+{
+	cube = true;
+}
+
 GLuint Texture::getId()
 {
-  if(dirty)
+  if(dirty && !skyBox && !cube)
   {
     glBindTexture(GL_TEXTURE_2D, id);
     pollForError();
@@ -40,6 +60,37 @@ GLuint Texture::getId()
     pollForError();
 
     dirty = false;
+  }
+  if (dirty && skyBox  && !cube)
+  {
+	  glBindTexture(GL_TEXTURE_2D, id);
+	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, size.x, size.y, 0, GL_RGB, GL_FLOAT, &data.at(0)); // note how we specify the texture's data value to be float
+
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	  glBindTexture(GL_TEXTURE_2D, 0);
+
+	  dirty = false;
+  }
+  if (dirty && !skyBox && !cube)
+  {
+	  glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+	  for (unsigned int i = 0; i < 6; ++i)
+	  {
+		  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+	  }
+	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	  glBindTexture(GL_TEXTURE_2D, 0);
+
+	  dirty = false;
+
   }
 
   return id;

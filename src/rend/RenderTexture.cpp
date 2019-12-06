@@ -56,6 +56,7 @@ GLuint RenderTexture::getId()
     glBindTexture(GL_TEXTURE_2D, 0);
     pollForError();
 
+
     glBindRenderbuffer(GL_RENDERBUFFER, rboId);
     pollForError();
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, size.x, size.y);

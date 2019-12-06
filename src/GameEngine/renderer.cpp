@@ -119,43 +119,36 @@ std::sr1::shared_ptr<rend::Texture> Renderer::createTexture(const std::string _l
 	return texture;
 }
 
-//void Renderer::createHDRTexture(const std::string _loc)
-//{
-//	stbi_set_flip_vertically_on_load(true);
-//	int w, h, nrComponents;
-//	float * data = stbi_loadf(_loc.c_str(), &w, &h, &nrComponents, 0);
-//	unsigned int hdrTexture;
-//	if (data)
-//	{
-//		glGenTextures(1, &hdrTexture);
-//		glBindTexture(GL_TEXTURE_2D, hdrTexture);
-//		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, w, h, 0, GL_RGB, GL_FLOAT, data);
-//
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//
-//		stbi_image_free(data);
-//	}
-//	else
-//	{
-//		std::cout << "Failed to load HDR image." << std::endl;
-//	}
-//}
-
 std::shared_ptr<Camera> Renderer::setCamera(std::shared_ptr<Camera> _cam)
 {
 	camera = _cam;
 	return camera;
 }
 
-void Renderer::rendererInitCube(const std::string & source, const std::string _mesh, const std::string _text)
+void Renderer::convertToCubeMap(const std::string & source, const std::string _mesh, const std::string _text)
 {
-	shaderSky = createShaderFF(source);
-	cubeMap = createTexture(_text);
-	meshSky = createMesh(_mesh);
-	meshSky->setTexture("equirectangularMap", cubeMap);
+	conversion = true;
+	shader = createShaderFF(source);
+	mesh = createMesh(_mesh);
+	texture = createTexture(_text);
+	mesh->setTexture("u_Texture", texture);
+	pbr = false;
+	convertShader = createShaderFF("../shader/HDRshader.txt");
+	unsigned int envCubemap;
+	glGenTextures(1, &envCubemap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+	for (unsigned int i = 0; i < 6; ++i)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// pbr: set up projection and view matrices for capturing data onto the 6 cubemap face directions
+	// ----------------------------------------------------------------------------------------------
 	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
 	glm::mat4 captureViews[] =
 	{
@@ -166,52 +159,11 @@ void Renderer::rendererInitCube(const std::string & source, const std::string _m
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
-	float vertices[] = {
-		// back face
-		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-		 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-		 1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
-		 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-		-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
-		// front face
-		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-		 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
-		 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-		 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-		-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
-		-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-		// left face
-		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-		-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
-		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-		-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-		-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-		-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-		// right face
-		 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-		 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-		 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
-		 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-		 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-		 1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
-		// bottom face
-		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-		 1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
-		 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-		 1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-		-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-		-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-		// top face
-		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-		 1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-		 1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
-		 1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-		-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-		-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
-	};
-	shaderSky->setUniform("u_Projection", captureProjection);
-	
+
+	convertShader->setUniform("equirectangularMap", 0);
+	convertShader->setUniform("u_Projection", captureProjection);
+
+
 }
 
 void Renderer::rendererInit(const std::string & source, const std::string _mesh, const std::string _text)
@@ -251,16 +203,16 @@ void Renderer::rendererInitPBR(const std::string & source, const std::string _me
 
 void Renderer::onDisplay()
 {
-		
-	    std::sr1::shared_ptr<Entity> ent = getEntity();
+
+		std::sr1::shared_ptr<Entity> ent = getEntity();
 		std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
-		
+
 		std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
-		shader->setUniform("u_LightPos", glm::vec3(0,0,5));
+		shader->setUniform("u_LightPos", glm::vec3(0, 0, 5));
 		if (pbr == false)
 		{
-			shader->setUniform("u_Emissive", glm::vec3(0, 10, 0));
-			shader->setUniform("u_Ambient", glm::vec3(0.4, 0.4, 0.4));
+			shader->setUniform("u_Emissive", glm::vec3(0, 0, 0));
+			shader->setUniform("u_Ambient", glm::vec3(0.0, 0.0, 0.0));
 		}
 		if (pbr == true)
 		{
@@ -273,14 +225,17 @@ void Renderer::onDisplay()
 			//shader->setUniform("u_Albedo", albedo);
 		}
 		//transform->addTrans(glm::vec3(0, 50, 0));
-		
+
 		shader->setUniform("u_View", glm::inverse(camera->getView()));
 		shader->setUniform("u_Projection", camera->getProj());
 		//shader->setUniform("u_Projection", camera->getProj());
 		//shader->setUniform("u_View", camera->getView());
 		shader->setUniform("u_Model", transform->getModel());
-			
+	
 		shader->setMesh(mesh);
 		shader->render();
+	
+
+		
 
 }

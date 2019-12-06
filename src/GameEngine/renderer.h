@@ -12,18 +12,22 @@ class Renderer: public Component
 	std::sr1::shared_ptr<rend::Mesh> mesh;
 	std::sr1::shared_ptr<rend::Mesh> meshSky;
 	std::sr1::shared_ptr<rend::Texture> texture;
+	std::sr1::shared_ptr<rend::Texture> skyTex;
 	std::sr1::shared_ptr<rend::Texture> albedoMap;
 	std::sr1::shared_ptr<rend::Texture> normalMap;
 	std::sr1::shared_ptr<rend::Texture> metallicMap;
 	std::sr1::shared_ptr<rend::Texture> roughnessMap;
 	std::sr1::shared_ptr<rend::Texture> aoMap;
-	std::sr1::shared_ptr<rend::Texture> cubeMap;
+	std::sr1::shared_ptr<rend::RenderTexture> cubeMap;
 
 
 	std::sr1::shared_ptr<rend::Shader> shader;
+	std::sr1::shared_ptr<rend::Shader> convertShader;
 	std::sr1::shared_ptr<rend::Shader> shaderSky;
 	std::shared_ptr<Camera> camera;
 	bool pbr;
+	bool hdr = false;
+	bool conversion = false;
 	//glm::vec3 albedo;
 	//float metallic;
 	//float roughness;
@@ -37,11 +41,13 @@ public:
 	std::sr1::shared_ptr<rend::Shader> createShaderFF(const std::string _loc);
 	std::sr1::shared_ptr<rend::Mesh> createMesh(const std::string _loc);
 	std::sr1::shared_ptr<rend::Texture> createTexture(const std::string _loc);
-	//void createHDRTexture(const std::string _loc);
 	std::shared_ptr<Camera> setCamera(std::shared_ptr<Camera> _cam);
-	void rendererInitCube(const std::string &source, const std::string _mesh, const std::string _text);
+
+	void convertToCubeMap(const std::string & source, const std::string _mesh, const std::string _text);
+
 	void rendererInit(const std::string &source, const std::string _mesh, const std::string _text);
 	void rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text, const std::string _alb, const std::string _norm, const std::string _met, const std::string _rough, const std::string _ao);
+
 
 	float angle = 0;
 	
