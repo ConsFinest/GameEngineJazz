@@ -8,6 +8,8 @@ glm::vec3 Camera::getPos()
 	return camPos;
 }
 
+//To Do - destruction remove camera from list inside engine
+
 glm::mat4 Camera::getView()
 {
 	/*glm::mat4 model(1.0f);
@@ -25,6 +27,12 @@ glm::mat4 Camera::getProj()
 	return projMat;
 }
 
+void Camera::setRendText()
+{
+	std::sr1::shared_ptr<Engine> eng = getEngine();
+	renderText = eng->getContext()->createRenderTexture();
+}
+
 void Camera::cameraInit(float _angle)
 {
 	angle = _angle;
@@ -32,4 +40,11 @@ void Camera::cameraInit(float _angle)
 	std::sr1::shared_ptr<Entity> ent = getEntity();
 	std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
 	camPos = transform->getPos();
+	std::sr1::shared_ptr<Engine> eng = getEngine();
+	eng->cameras.push_back(ent->getComponent<Camera>());
+}
+
+std::sr1::shared_ptr<rend::RenderTexture> Camera::getRendText()
+{
+	return renderText;
 }

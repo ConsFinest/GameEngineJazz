@@ -88,9 +88,14 @@ void Engine::start()
 		{
 			(*it)->tick();
 		}
-		for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
+		for (std::vector<std::weak_ptr<Camera>>::iterator camIt = cameras.begin(); camIt != cameras.end(); camIt++)
 		{
-			(*it)->display();
+			currentCam = *camIt;
+
+			for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
+			{
+				(*it)->display();
+			}
 		}
 		SDL_GL_SwapWindow(window);
 	}
@@ -104,7 +109,7 @@ void Engine::stop()
 
 std::sr1::shared_ptr<rend::Context> Engine::getContext()
 {
-	return std::sr1::shared_ptr<rend::Context>();
+	return context;
 }
 
 

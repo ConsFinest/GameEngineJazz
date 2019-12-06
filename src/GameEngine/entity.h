@@ -68,10 +68,9 @@ public:
 			{
 				return rtn;
 			}
-			if (!rtn)
-			{
-				throw rend::Exception("COMPONENT TYPE COULD NOT BE FOUND");
-			}
+		}
+		{
+			throw rend::Exception("COMPONENT TYPE COULD NOT BE FOUND");
 		}
 	}
 };

@@ -19,6 +19,7 @@
 #include "entity.h"
 
 
+class Camera;
 class Entity; //forward declare
 
 class Engine
@@ -34,6 +35,9 @@ public:
 	void stop();
 	std::sr1::shared_ptr<rend::Context> getContext();
 	std::sr1::shared_ptr<rend::Context> context;
+	std::sr1::weak_ptr<Camera> currentCam;
+	std::vector<std::sr1::weak_ptr<Camera>> cameras;
+
 
 private: 
 	std::vector<std::shared_ptr<Entity>> entities;

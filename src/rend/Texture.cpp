@@ -17,81 +17,31 @@ GLuint Texture::getTexId()
   return getId();
 }
 
-bool Texture::ifSkybox()
-{
-	return skyBox;
-}
-
-void Texture::setSkyTrue()
-{
-	skyBox = true;
-}
-
-bool Texture::ifCube()
-{
-	return cube;
-}
-
-void Texture::setCubeTrue()
-{
-	cube = true;
-}
-
 GLuint Texture::getId()
 {
-  if(dirty && !skyBox && !cube)
-  {
-    glBindTexture(GL_TEXTURE_2D, id);
-    pollForError();
+	if (dirty)
+	{
+		glBindTexture(GL_TEXTURE_2D, id);
+		pollForError();
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(0));
-    pollForError();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(0));
+		pollForError();
 
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    pollForError();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    pollForError();
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		pollForError();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		pollForError();
 
-    glGenerateMipmap(GL_TEXTURE_2D);
-    pollForError();
+		glGenerateMipmap(GL_TEXTURE_2D);
+		pollForError();
 
-    glBindTexture(GL_TEXTURE_2D, 0);
-    pollForError();
+		glBindTexture(GL_TEXTURE_2D, 0);
+		pollForError();
 
-    dirty = false;
-  }
-  if (dirty && skyBox  && !cube)
-  {
-	  glBindTexture(GL_TEXTURE_2D, id);
-	  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, size.x, size.y, 0, GL_RGB, GL_FLOAT, &data.at(0)); // note how we specify the texture's data value to be float
-
-	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	  glBindTexture(GL_TEXTURE_2D, 0);
-
-	  dirty = false;
-  }
-  if (dirty && !skyBox && !cube)
-  {
-	  glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-	  for (unsigned int i = 0; i < 6; ++i)
-	  {
-		  glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
-	  }
-	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	  glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	  glBindTexture(GL_TEXTURE_2D, 0);
-
-	  dirty = false;
-
-  }
+		dirty = false;
+	}
+  
 
   return id;
 }

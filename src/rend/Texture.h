@@ -28,10 +28,7 @@ struct Texture : public TextureAdapter, public std::sr1::noncopyable
 
   GLuint getId();
   GLuint getTexId();
-  bool ifSkybox();
-  void setSkyTrue();
-  bool ifCube();
-  void setCubeTrue();
+
 
 private:
   friend struct Context;
@@ -42,8 +39,7 @@ private:
   ivec2 size;
   std::sr1::zero_initialized<bool> dirty;
   std::sr1::zero_initialized<int> bpp;
-  bool skyBox = false;
-  bool cube = false;
+
 
 
   //GLuint getId();

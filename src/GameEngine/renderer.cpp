@@ -125,47 +125,6 @@ std::shared_ptr<Camera> Renderer::setCamera(std::shared_ptr<Camera> _cam)
 	return camera;
 }
 
-void Renderer::convertToCubeMap(const std::string & source, const std::string _mesh, const std::string _text)
-{
-	conversion = true;
-	shader = createShaderFF(source);
-	mesh = createMesh(_mesh);
-	texture = createTexture(_text);
-	mesh->setTexture("u_Texture", texture);
-	pbr = false;
-	convertShader = createShaderFF("../shader/HDRshader.txt");
-	unsigned int envCubemap;
-	glGenTextures(1, &envCubemap);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-	for (unsigned int i = 0; i < 6; ++i)
-	{
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
-	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	// pbr: set up projection and view matrices for capturing data onto the 6 cubemap face directions
-	// ----------------------------------------------------------------------------------------------
-	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-	glm::mat4 captureViews[] =
-	{
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
-	};
-
-	convertShader->setUniform("equirectangularMap", 0);
-	convertShader->setUniform("u_Projection", captureProjection);
-
-
-}
-
 void Renderer::rendererInit(const std::string & source, const std::string _mesh, const std::string _text)
 {
 	shader = createShaderFF(source);
@@ -217,7 +176,7 @@ void Renderer::onDisplay()
 		if (pbr == true)
 		{
 			//shader->setUniform("u_Roughness", roughness);
-			shader->setUniform("u_CamPos", camera->getPos());
+			shader->setUniform("u_CamPos", getEngine()->currentCam.lock()->getPos());
 			shader->setUniform("u_LightColor", glm::vec3(300.0f, 300.0f, 300.0f));
 
 			//shader->setUniform("u_Ao", ao);
@@ -226,16 +185,20 @@ void Renderer::onDisplay()
 		}
 		//transform->addTrans(glm::vec3(0, 50, 0));
 
-		shader->setUniform("u_View", glm::inverse(camera->getView()));
-		shader->setUniform("u_Projection", camera->getProj());
+		shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
+		shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
 		//shader->setUniform("u_Projection", camera->getProj());
 		//shader->setUniform("u_View", camera->getView());
 		shader->setUniform("u_Model", transform->getModel());
-	
 		shader->setMesh(mesh);
-		shader->render();
+		if (getEngine()->currentCam.lock()->getRendText() != NULL)
+		{
+			shader->render(getEngine()->currentCam.lock()->getRendText());
+		}
+		else
+		{
+			shader->render();
+		}
 	
-
-		
 
 }
