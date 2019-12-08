@@ -23,12 +23,13 @@ struct Shader : public std::sr1::noncopyable
 {
   ~Shader();
 
-  void render();
-  void render(const std::sr1::shared_ptr<RenderTexture>& target);
+  void render(bool _skybox);
+  void render(const std::sr1::shared_ptr<RenderTexture>& target, bool _skybox, int _i);
 
   GLuint getId();
   void setSource(const std::string& source);
   void parse(const std::string& source);
+
 
   void setUniform(const std::string& variable, float value);
   void setUniform(const std::string& variable, mat4 value);

@@ -56,7 +56,7 @@ std::sr1::shared_ptr<rend::Shader> Renderer::createShaderFF(const std::string _l
 
 }
 
-std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc)
+std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc, bool _conversion)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
 	mesh = eng->context->createMesh();
@@ -77,7 +77,7 @@ std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc)
 			obj += line + "\n";
 		}
 
-		mesh->parse(obj);
+		mesh->parse(obj, _conversion);
 	}
 	return mesh;
 }
@@ -128,36 +128,11 @@ std::shared_ptr<Camera> Renderer::setCamera(std::shared_ptr<Camera> _cam)
 void Renderer::rendererInit(const std::string & source, const std::string _mesh, const std::string _text)
 {
 	shader = createShaderFF(source);
-	mesh = createMesh(_mesh);
+	mesh = createMesh(_mesh, false);
 	texture = createTexture(_text);
 	mesh->setTexture("u_Texture", texture);
-	pbr = false;
-}
+	shader->setMesh(mesh);
 
-void Renderer::rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text, const std::string _alb, const std::string _norm, const std::string _met, const std::string _rough, const std::string _ao)
-{
-	shader = createShaderFF(source);
-	mesh = createMesh(_mesh);
-	texture = createTexture(_text);
-	albedoMap = createTexture(_alb);
-	normalMap = createTexture(_norm);
-	metallicMap = createTexture(_met);
-	roughnessMap = createTexture(_rough);
-	aoMap = createTexture(_ao);
-	mesh->setTexture("u_Texture", texture);
-	
-
-	mesh->setTexture("u_AlbedoMap", albedoMap);
-	mesh->setTexture("u_NormalMap", normalMap);
-	mesh->setTexture("u_MetallicMap", metallicMap);
-	mesh->setTexture("u_RoughnessMap", roughnessMap);
-	mesh->setTexture("u_AoMap", albedoMap);
-
-	//albedo = glm::vec3(0.5, 0.5,0.5);
-	//metallic = 1;
-	//roughness = 1.0f;
-	//ao = 1.0f;
-	pbr = true;
 }
 
 void Renderer::onDisplay()
@@ -167,37 +142,47 @@ void Renderer::onDisplay()
 		std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
 
 		std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
+	
 		shader->setUniform("u_LightPos", glm::vec3(0, 0, 5));
-		if (pbr == false)
-		{
-			shader->setUniform("u_Emissive", glm::vec3(0, 0, 0));
-			shader->setUniform("u_Ambient", glm::vec3(0.0, 0.0, 0.0));
-		}
-		if (pbr == true)
-		{
-			//shader->setUniform("u_Roughness", roughness);
-			shader->setUniform("u_CamPos", getEngine()->currentCam.lock()->getPos());
-			shader->setUniform("u_LightColor", glm::vec3(300.0f, 300.0f, 300.0f));
-
-			//shader->setUniform("u_Ao", ao);
-			//shader->setUniform("u_Metallic", metallic);
-			//shader->setUniform("u_Albedo", albedo);
-		}
-		//transform->addTrans(glm::vec3(0, 50, 0));
-
-		shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
-		shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
-		//shader->setUniform("u_Projection", camera->getProj());
-		//shader->setUniform("u_View", camera->getView());
-		shader->setUniform("u_Model", transform->getModel());
-		shader->setMesh(mesh);
+		
+		shader->setUniform("u_Emissive", glm::vec3(0, 0, 0));
+		shader->setUniform("u_Ambient", glm::vec3(0.0, 0.0, 0.0));
+		
 		if (getEngine()->currentCam.lock()->getRendText() != NULL)
 		{
-			shader->render(getEngine()->currentCam.lock()->getRendText());
+			//if (once == false)
+			//{
+			//	glm::mat4 captureViews[] =
+			//	{
+			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+			//	};
+
+			//	shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
+			//	createEmptyCubeText();
+			//	glBindFramebuffer(GL_FRAMEBUFFER, getEngine()->currentCam.lock()->getRendText()->getId());
+			//	for (unsigned int i = 0; i < 6; i++)
+			//	{
+			//		shader->setUniform("u_View", glm::inverse(captureViews[i]));
+			//		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cubeText->getTexId(), 0); //TO DO ROTATE CAMERA TO SET EACH SIDE.
+			//		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//		//shader->render(getEngine()->currentCam.lock()->getRendText());
+			//	}
+			//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			//	once == true;
+			//}
+			
 		}
 		else
 		{
-			shader->render();
+			shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
+			shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
+			shader->setUniform("u_Model", transform->getModel());
+			shader->render(false);
 		}
 	
 

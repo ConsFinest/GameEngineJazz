@@ -25,7 +25,7 @@ struct RenderTexture : public TextureAdapter, public std::sr1::noncopyable
   int getHeight() const;
 
   GLuint getTexId();
-  GLuint getId();
+  GLuint getId(int _i);
   void clear();
 
 private:

@@ -27,7 +27,7 @@ struct Mesh
 {
   void setBuffer(const std::string& name, const std::sr1::shared_ptr<Buffer>& buffer);
   void setTexture(const std::string& name, const std::sr1::shared_ptr<TextureAdapter>& texture);
-  void parse(const std::string& data);
+  void parse(const std::string& data, bool _conversion);
 
 private:
   friend struct Context;
@@ -37,7 +37,7 @@ private:
   std::sr1::vector<std::sr1::shared_ptr<BufferData> > buffers;
   std::sr1::vector<std::sr1::shared_ptr<TextureData> > textures;
 
-  void safeParse(const std::string& data, std::string& currentLine);
+  void safeParse(const std::string& data, std::string& currentLine, bool _conversion);
 
 };
 

@@ -27,7 +27,7 @@ GLuint RenderTexture::getTexId()
 
 void RenderTexture::clear()
 {
-  glBindFramebuffer(GL_FRAMEBUFFER, getId());
+  glBindFramebuffer(GL_FRAMEBUFFER, getId(0));
   pollForError();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -37,7 +37,7 @@ void RenderTexture::clear()
   pollForError();
 }
 
-GLuint RenderTexture::getId()
+GLuint RenderTexture::getId(int _i)
 {
   if(dirty)
   {
@@ -51,7 +51,14 @@ GLuint RenderTexture::getId()
     pollForError();
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     pollForError();
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
+	if (_i == 0)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, id, 0);
+	}
+	if (_i != 0)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + _i -1, id, 0);
+	}
     pollForError();
     glBindTexture(GL_TEXTURE_2D, 0);
     pollForError();

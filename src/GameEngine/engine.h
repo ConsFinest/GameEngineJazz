@@ -36,6 +36,7 @@ public:
 	std::sr1::shared_ptr<rend::Context> getContext();
 	std::sr1::shared_ptr<rend::Context> context;
 	std::sr1::weak_ptr<Camera> currentCam;
+	//To do make camera vector private
 	std::vector<std::sr1::weak_ptr<Camera>> cameras;
 
 
