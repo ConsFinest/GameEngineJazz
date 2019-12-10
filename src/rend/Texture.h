@@ -38,9 +38,9 @@ private:
 
   std::sr1::shared_ptr<Context> context;
   std::sr1::zero_initialized<GLuint> id;
-  std::sr1::vector<vec4> data;
+  //std::sr1::vector<vec4> data;
   ivec2 size;
-  //glm::vec3 *dataA;
+  glm::vec4 *dataA;
   std::sr1::zero_initialized<bool> dirty;
   std::sr1::zero_initialized<int> bpp;
   bool cubeMap = false;

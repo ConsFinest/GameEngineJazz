@@ -10,12 +10,13 @@ Texture::~Texture()
   GLuint delId = id;
   glDeleteTextures(1, &delId);
   pollForError();
+  delete dataA;
 }
 
 Texture::Texture()
 {
-	//dataA = NULL;
-	data.resize(NULL);
+	dataA = NULL;
+	//data.resize(NULL);
 }
 
 GLuint Texture::getTexId()
@@ -37,8 +38,10 @@ GLuint Texture::getId()
 		glBindTexture(GL_TEXTURE_2D, id);
 		pollForError();
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(0));
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, dataA);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(0));
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, dataA);
+		delete dataA;
+		dataA = NULL;
 
 		pollForError();
 
@@ -61,8 +64,8 @@ GLuint Texture::getId()
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 		for (unsigned int i = 0; i < 6; i++)
 		{
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(i));
-				//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, dataA);
+				//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(i));
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, dataA);
 
 		}
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -94,8 +97,8 @@ void Texture::setSize(unsigned int width, unsigned int height)
 {
   dirty = true;
   size = ivec2(width, height);
-  data.resize(width * height);
-
+  //data.resize(width * height);
+  dataA = new glm::vec4[width*height];
 }
 
 void Texture::setPixel(unsigned int x, unsigned int y, vec3 rgb)
@@ -108,12 +111,14 @@ void Texture::setPixel(unsigned int x, unsigned int y, vec4 rgba)
 {
   dirty = true;
   bpp = 4;
-  data.at(size.x * (size.y - 1 - y) + x) = rgba;
+  //data.at(size.x * (size.y - 1 - y) + x) = rgba;
+  dataA[size.x * (size.y - 1 - y) + x] = rgba;
 }
 
 vec4 Texture::getPixel(unsigned int x, unsigned int y) const
 {
-  return data.at(size.x * y + x);
+  //return data.at(size.x * y + x);
+	return dataA[size.x * y + x];
 }
 
 }

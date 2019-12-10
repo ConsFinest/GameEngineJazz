@@ -54,7 +54,7 @@ std::sr1::shared_ptr<Texture> Context::createTexture()
   rtn->context = self.lock();
   rtn->id = id;
 
-  rtn->setSize(256, 256);
+  rtn->setSize(256, 256); 
 
   return rtn;
 }

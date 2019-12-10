@@ -117,6 +117,7 @@ std::sr1::shared_ptr<rend::Texture> Renderer::createTexture(const std::string _l
 
 		stbi_image_free(data);
 	}
+	//texture->getId();
 	return texture;
 }
 
