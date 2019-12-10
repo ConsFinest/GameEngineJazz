@@ -70,7 +70,7 @@ std::sr1::shared_ptr<rend::Mesh> PBR::createMesh(const std::string _loc, bool _c
 			obj += line + "\n";
 		}
 
-		mesh->parse(obj, _conversion);
+		mesh->parse(obj);
 	}
 	return mesh;
 }
@@ -87,7 +87,7 @@ std::sr1::shared_ptr<rend::Texture> PBR::createTexture(const std::string _loc)
 
 		unsigned char *data = stbi_load(_loc.c_str(),
 			&w, &h, &bpp, 3);
-
+	
 		if (!data)
 		{
 			throw rend::Exception("Failed to open texture");
@@ -113,13 +113,51 @@ std::sr1::shared_ptr<rend::Texture> PBR::createTexture(const std::string _loc)
 	return texture;
 }
 
+std::sr1::shared_ptr<rend::Texture> PBR::createTextureHDR(const std::string _loc)
+{
+	std::sr1::shared_ptr<Engine> eng = getEngine();
+	texture = eng->context->createTexture();
+	{
+		int w = 0;
+		int h = 0;
+		int bpp = 0;
+
+		float *data = stbi_loadf(_loc.c_str(),
+			&w, &h, &bpp, 0);
+		
+		if (!data)
+		{
+			throw rend::Exception("Failed to open texture");
+		}
+
+		texture->setSize(w, h);
+
+		for (int y = 0; y < h; y++)
+		{
+			for (int x = 0; x < w; x++)
+			{
+					int r = y * w * 3 + x * 3;
+
+					texture->setPixel(x, y, glm::vec3(
+						data[r] / 255.0f,
+						data[r + 1] / 255.0f,
+						data[r + 2] / 255.0f));
+				
+			}
+		}
+
+		stbi_image_free(data);
+	}
+	return texture;
+}
+
 std::shared_ptr<Camera> PBR::setCamera(std::shared_ptr<Camera> _cam)
 {
 	camera = _cam;
 	return camera;
 }
 
-void PBR::rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text, const std::string _alb, const std::string _norm, const std::string _met, const std::string _rough, const std::string _ao)
+void PBR::rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text, const std::string _alb, const std::string _norm, const std::string _met, const std::string _rough, const std::string _ao, const std::string _ir)
 {
 	shader = createShaderFF(source);
 	mesh = createMesh(_mesh, false);
@@ -129,6 +167,7 @@ void PBR::rendererInitPBR(const std::string & source, const std::string _mesh, c
 	metallicMap = createTexture(_met);
 	roughnessMap = createTexture(_rough);
 	aoMap = createTexture(_ao);
+	irMap = createTexture(_ir);
 
 	mesh->setTexture("u_Texture", texture);
 
@@ -137,6 +176,7 @@ void PBR::rendererInitPBR(const std::string & source, const std::string _mesh, c
 	mesh->setTexture("u_MetallicMap", metallicMap);
 	mesh->setTexture("u_RoughnessMap", roughnessMap);
 	mesh->setTexture("u_AoMap", albedoMap);
+	mesh->setTexture("u_IrMap", irMap);
 	shader->setMesh(mesh);
 }
 
@@ -147,9 +187,9 @@ void PBR::onDisplay()
 
 	std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
 
-	shader->setUniform("u_LightPos", glm::vec3(0, 0, 5));
+	//shader->setUniform("u_LightPos", glm::vec3(0, 0, 5));
 	shader->setUniform("u_CamPos", getEngine()->currentCam.lock()->getPos());
-	shader->setUniform("u_LightColor", glm::vec3(300.0f, 300.0f, 300.0f));
+	//shader->setUniform("u_LightColor", glm::vec3(300.0f, 300.0f, 300.0f));
 	if (getEngine()->currentCam.lock()->getRendText() != NULL)
 	{
 		/*shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
@@ -162,7 +202,7 @@ void PBR::onDisplay()
 		shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
 		shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
 		shader->setUniform("u_Model", transform->getModel());
-		shader->render(false);
+		shader->render();
 	}
 
 }

@@ -65,13 +65,13 @@ void Mesh::setTexture(const std::string& name, const std::sr1::shared_ptr<Textur
   textures.push_back(td);
 }
 
-void Mesh::parse(const std::string& data, bool _conversion)
+void Mesh::parse(const std::string& data)
 {
   std::string currentLine;
 
   try
   {
-    safeParse(data, currentLine, _conversion);
+    safeParse(data, currentLine);
   }
   catch(std::exception& e)
   {
@@ -79,7 +79,7 @@ void Mesh::parse(const std::string& data, bool _conversion)
   }
 }
 
-void Mesh::safeParse(const std::string& data, std::string& currentLine, bool _conversion)
+void Mesh::safeParse(const std::string& data, std::string& currentLine)
 {
   std::sr1::vector<std::string> lines;
   Util::splitStringLineEnding(data, lines);
@@ -198,10 +198,9 @@ void Mesh::safeParse(const std::string& data, std::string& currentLine, bool _co
       b->add(fit->tcb);
       b->add(fit->tcc);
     }
-	if (!_conversion)
-	{
-		setBuffer("a_TexCoord", b);
-	}
+
+	setBuffer("a_TexCoord", b);
+	
   }
 
   if(normals.size() > 0)
@@ -215,10 +214,9 @@ void Mesh::safeParse(const std::string& data, std::string& currentLine, bool _co
       b->add(fit->nb);
       b->add(fit->nc);
     }
-	if (!_conversion)
-	{
-		setBuffer("a_Normal", b);
-	}
+	
+	setBuffer("a_Normal", b);
+	
   }
 
   if(lmcs.size() > 0)

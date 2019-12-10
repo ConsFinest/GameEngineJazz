@@ -56,19 +56,19 @@ GLuint Shader::getId()
   return id;
 }
 
-void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target, bool _skybox, int _i)
+void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target)
 {
   std::array<GLint, 4> viewport = {0};
   glGetIntegerv(GL_VIEWPORT, &viewport.at(0));
   pollForError();
 
-  glBindFramebuffer(GL_FRAMEBUFFER, target->getId(_i));
+  glBindFramebuffer(GL_FRAMEBUFFER, target->getId());
   pollForError();
 
   glViewport(0, 0, target->getWidth(), target->getHeight());
   pollForError();
 
-  render(_skybox);
+  render();
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   pollForError();
@@ -78,7 +78,27 @@ void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target, bool _sky
   //render();
 }
 
-void Shader::render(bool _skybox)
+void Shader::render(const std::sr1::shared_ptr<RenderTexture>& target, GLuint _id)
+{
+	std::array<GLint, 4> viewport = { 0,  0, 0, 0 };
+	glGetIntegerv(GL_VIEWPORT, &viewport.at(0));
+	pollForError();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, target->getId(_id));
+	pollForError();
+
+	glViewport(0, 0, target->getWidth(), target->getHeight());
+	pollForError();
+
+	render();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	pollForError();
+
+	glViewport(viewport.at(0), viewport.at(1), viewport.at(2), viewport.at(3));
+}
+
+void Shader::render()
 {
   glEnable(GL_DEPTH_TEST); pollForError();
   glEnable(GL_CULL_FACE); pollForError();
@@ -114,14 +134,9 @@ void Shader::render(bool _skybox)
       else if((*it)->type == GL_SAMPLER_2D)
       {
         glActiveTexture(GL_TEXTURE0 + activeTexture); pollForError();
-		if (!_skybox)
-		{
-			glBindTexture(GL_TEXTURE_2D, (*it)->textureVal->getTexId()); pollForError();
-		}
-		if (_skybox)
-		{
-			glBindTexture(GL_TEXTURE_CUBE_MAP, (*it)->textureVal->getTexId());
-		}
+		
+		glBindTexture(GL_TEXTURE_2D, (*it)->textureVal->getTexId()); pollForError();
+		
         glUniform1i((*it)->loc, activeTexture); pollForError();
         activeTexture++;
       }

@@ -77,7 +77,7 @@ std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc, bo
 			obj += line + "\n";
 		}
 
-		mesh->parse(obj, _conversion);
+		mesh->parse(obj);
 	}
 	return mesh;
 }
@@ -130,6 +130,7 @@ void Renderer::rendererInit(const std::string & source, const std::string _mesh,
 	shader = createShaderFF(source);
 	mesh = createMesh(_mesh, false);
 	texture = createTexture(_text);
+	spare = getEngine()->getContext()->createTexture();
 	mesh->setTexture("u_Texture", texture);
 	shader->setMesh(mesh);
 
@@ -150,31 +151,13 @@ void Renderer::onDisplay()
 		
 		if (getEngine()->currentCam.lock()->getRendText() != NULL)
 		{
-			//if (once == false)
-			//{
-			//	glm::mat4 captureViews[] =
-			//	{
-			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-			//		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
-			//	};
-
-			//	shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
-			//	createEmptyCubeText();
-			//	glBindFramebuffer(GL_FRAMEBUFFER, getEngine()->currentCam.lock()->getRendText()->getId());
-			//	for (unsigned int i = 0; i < 6; i++)
-			//	{
-			//		shader->setUniform("u_View", glm::inverse(captureViews[i]));
-			//		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, cubeText->getTexId(), 0); //TO DO ROTATE CAMERA TO SET EACH SIDE.
-			//		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//		//shader->render(getEngine()->currentCam.lock()->getRendText());
-			//	}
-			//	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			//	once == true;
-			//}
+			shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
+			shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
+			shader->setUniform("u_Model", transform->getModel());
+			//getEngine()->currentCam.lock()->getRendText()->setTexId(spare->getId());
+			shader->render(getEngine()->currentCam.lock()->getRendText(),spare->getId());
+			mesh->setTexture("u_Texture", spare);
+			shader->setMesh(mesh);
 			
 		}
 		else
@@ -182,7 +165,7 @@ void Renderer::onDisplay()
 			shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
 			shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
 			shader->setUniform("u_Model", transform->getModel());
-			shader->render(false);
+			shader->render();
 		}
 	
 

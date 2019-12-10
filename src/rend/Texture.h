@@ -28,7 +28,7 @@ struct Texture : public TextureAdapter, public std::sr1::noncopyable
 
   GLuint getId();
   GLuint getTexId();
-  void SetCubeMap();
+  
 
 
 private:
@@ -40,7 +40,7 @@ private:
   ivec2 size;
   std::sr1::zero_initialized<bool> dirty;
   std::sr1::zero_initialized<int> bpp;
-  bool cubeMap = false;
+  
 
 
 

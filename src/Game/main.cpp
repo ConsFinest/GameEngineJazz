@@ -73,8 +73,8 @@ int main()
 	std::shared_ptr<Renderer> skyRend = skyBox->addComponent<Renderer>();
 
 	
-	PBRrend->rendererInitPBR("../shader/PBRshader.txt", "../samples/PBRsphere/pbrSphere.obj", "../samples/PBRsphere/basecolor.png","../samples/PBRsphere/basecolor.png", "../samples/PBRsphere/normal.png", "../samples/PBRsphere/metallic.png", "../samples/PBRsphere/roughness.png", "../samples/PBRsphere/grey.png");
-	skyRend->rendererInit("../shader/shader.txt", "../samples/PBRsphere/Skybox.obj", "../samples/Mono_Lake_C/Mono_Lake_C_HiRes.jpg");
+	PBRrend->rendererInitPBR("../shader/PBRshader.txt", "../samples/PBRsphere/pbrSphere.obj", "../samples/PBRsphere/basecolor.png","../samples/PBRsphere/basecolor.png", "../samples/PBRsphere/normal.png", "../samples/PBRsphere/metallic.png", "../samples/PBRsphere/roughness.png", "../samples/PBRsphere/grey.png", "../samples/Mono_Lake_C/Mono_Lake_C_Ref.hdr");
+	skyRend->rendererInit("../shader/shader.txt", "../samples/PBRsphere/Skybox.obj", "../samples/Mono_Lake_C/Mono_Lake_C_Ref.hdr");
 	
 	//std::shared_ptr<AudioSource> sound = entity->addComponent<AudioSource>();
 	//sound->audioSourceInit("../sounds/dixie_horn.ogg");

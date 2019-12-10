@@ -35,12 +35,11 @@ public:
 	std::sr1::shared_ptr<rend::Shader> createShaderFF(const std::string _loc);
 	std::sr1::shared_ptr<rend::Mesh> createMesh(const std::string _loc, bool _conversion);
 	std::sr1::shared_ptr<rend::Texture> createTexture(const std::string _loc);
+	std::sr1::shared_ptr<rend::Texture> createTextureHDR(const std::string _loc);
 
 	std::shared_ptr<Camera> setCamera(std::shared_ptr<Camera> _cam);
 
-	void skyBoxCreation();
-
-	void rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text, const std::string _alb, const std::string _norm, const std::string _met, const std::string _rough, const std::string _ao);
+	void rendererInitPBR(const std::string & source, const std::string _mesh, const std::string _text, const std::string _alb, const std::string _norm, const std::string _met, const std::string _rough, const std::string _ao, const std::string _ir);
 
 	float angle = 0;
 

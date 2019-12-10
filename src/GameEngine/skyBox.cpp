@@ -69,7 +69,7 @@ std::sr1::shared_ptr<rend::Mesh> Skybox::createMesh(const std::string _loc, bool
 			obj += line + "\n";
 		}
 
-		mesh->parse(obj, _conversion);
+		mesh->parse(obj);
 	}
 	return mesh;
 }
@@ -119,34 +119,6 @@ std::shared_ptr<Camera> Skybox::setCamera(std::shared_ptr<Camera> _cam)
 
 void Skybox::SkyBoxInit(const std::string & source, const std::string _mesh, const std::string _text)
 {
-	std::sr1::shared_ptr<Engine> eng = getEngine();
-	cube = eng->getContext()->createTexture();
-	cube->SetCubeMap();
-	texture = createTexture(_text);
-	shader = createShaderFF(source);
-	mesh = createMesh(_mesh, true);
-	conversion = createShaderFF("../shaders/HDRshader.txt");
-	glm::mat4 captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-	glm::mat4 captureViews[] =
-	{
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
-		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
-	};
-
-	conversion->setSampler("equirectangularMap", 0);
-	conversion->setUniform("projection", captureProjection);
-	
-	for (unsigned int i = 0; i < 6; ++i)
-	{
-		conversion->setUniform("view", captureViews[i]);
-		conversion->setMesh(mesh);
-		conversion->render(camera->getRendText(),true,i+1);
-	}
-
 
 }
 
