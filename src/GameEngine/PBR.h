@@ -21,8 +21,8 @@ class PBR : public Component
 	std::sr1::shared_ptr<rend::Texture> irMap;
 
 	std::sr1::shared_ptr<rend::Shader> shader;
-	std::sr1::shared_ptr<rend::Shader> conversion;
-	std::sr1::shared_ptr<rend::Shader> skyBox;
+	//std::sr1::shared_ptr<rend::Shader> conversion;
+	//std::sr1::shared_ptr<rend::Shader> skyBox;
 
 	std::shared_ptr<Camera> camera;
 

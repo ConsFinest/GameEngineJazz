@@ -48,3 +48,12 @@ std::sr1::shared_ptr<rend::RenderTexture> Camera::getRendText()
 {
 	return renderText;
 }
+
+void Camera::onTick()
+{
+	/*std::sr1::shared_ptr<Entity> ent = getEntity();
+	std::sr1::shared_ptr<Transform> trans = ent->getComponent<Transform>();
+	trans->addRot(glm::vec3(0, -0.1, 0));*/
+}
+
+

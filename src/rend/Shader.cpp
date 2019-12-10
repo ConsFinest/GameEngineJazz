@@ -43,6 +43,7 @@ std::string VariableInfo::convertType(GLenum type)
   else if(type == GL_SAMPLER_2D) return "GL_SAMPLER_2D";
   else if(type == GL_FLOAT) return "GL_FLOAT";
   else throw Exception(std::string("Invalid type"));
+  
 }
 
 Shader::~Shader()

@@ -12,19 +12,34 @@ Texture::~Texture()
   pollForError();
 }
 
+Texture::Texture()
+{
+	//dataA = NULL;
+	data.resize(NULL);
+}
+
 GLuint Texture::getTexId()
 {
   return getId();
 }
 
+void Texture::setCubeMap()
+{
+	cubeMap = true;
+}
+
+
+
 GLuint Texture::getId()
 {
-	if (dirty)
+	if (dirty && !cubeMap)
 	{
 		glBindTexture(GL_TEXTURE_2D, id);
 		pollForError();
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(0));
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, dataA);
+
 		pollForError();
 
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -39,6 +54,22 @@ GLuint Texture::getId()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		pollForError();
 
+		dirty = false;
+	}
+	if (dirty && cubeMap)
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		for (unsigned int i = 0; i < 6; i++)
+		{
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, &data.at(i));
+				//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_FLOAT, dataA);
+
+		}
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		dirty = false;
 	}
   return id;
@@ -64,6 +95,7 @@ void Texture::setSize(unsigned int width, unsigned int height)
   dirty = true;
   size = ivec2(width, height);
   data.resize(width * height);
+
 }
 
 void Texture::setPixel(unsigned int x, unsigned int y, vec3 rgb)

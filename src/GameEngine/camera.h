@@ -18,6 +18,7 @@ public:
 	void setRendText();
 	void cameraInit(float _angle);
 	std::sr1::shared_ptr<rend::RenderTexture> getRendText();
+	virtual void onTick();
 
 };
 

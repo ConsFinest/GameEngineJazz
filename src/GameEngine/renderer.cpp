@@ -7,7 +7,8 @@
 
 Renderer::Renderer()
 {
-	
+	programId = 0;
+	vaoId = 0;
 }
 
 Renderer::~Renderer()
@@ -159,6 +160,10 @@ void Renderer::onDisplay()
 			mesh->setTexture("u_Texture", spare);
 			shader->setMesh(mesh);
 			
+			/*shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
+			shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
+			shader->setUniform("u_Model", transform->getModel());
+			shader->render();*/
 		}
 		else
 		{

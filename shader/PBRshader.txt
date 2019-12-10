@@ -78,7 +78,7 @@ void main()
 	vec3 N = normalize(normal);
 	vec3 V = normalize(u_CamPos - v_FragPos); 
 	
-	u_LightPos = v_FragPos + vec3(0.1,0.1,0.1);
+	u_LightPos = v_FragPos + (N*vec3(1,1,1));
 
 	vec3 F0 = vec3(0.04); 
         F0 = mix(F0, albedo, metallic);

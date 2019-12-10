@@ -16,6 +16,7 @@ struct Context;
 struct Texture : public TextureAdapter, public std::sr1::noncopyable
 {
   ~Texture();
+  Texture();
 
   void setSize(unsigned int width, unsigned int height);
   void setPixel(unsigned int x, unsigned int y, vec3 rgb);
@@ -28,6 +29,7 @@ struct Texture : public TextureAdapter, public std::sr1::noncopyable
 
   GLuint getId();
   GLuint getTexId();
+  void setCubeMap();
   
 
 
@@ -38,8 +40,10 @@ private:
   std::sr1::zero_initialized<GLuint> id;
   std::sr1::vector<vec4> data;
   ivec2 size;
+  //glm::vec3 *dataA;
   std::sr1::zero_initialized<bool> dirty;
   std::sr1::zero_initialized<int> bpp;
+  bool cubeMap = false;
   
 
 

@@ -103,7 +103,7 @@ GLuint RenderTexture::getId(GLuint _id)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		pollForError();
 
-
+		
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _id, 0);
 
 

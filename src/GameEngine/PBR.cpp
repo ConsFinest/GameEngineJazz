@@ -2,6 +2,8 @@
 
 PBR::PBR()
 {
+	programId = 0;
+	vaoId = 0;
 }
 
 PBR::~PBR()
@@ -184,6 +186,7 @@ void PBR::onDisplay()
 {
 	std::sr1::shared_ptr<Entity> ent = getEntity();
 	std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
+	//transform->addRot({ 0, 1, 0 });
 
 	std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
 
@@ -192,10 +195,10 @@ void PBR::onDisplay()
 	//shader->setUniform("u_LightColor", glm::vec3(300.0f, 300.0f, 300.0f));
 	if (getEngine()->currentCam.lock()->getRendText() != NULL)
 	{
-		/*shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
+		shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
 		shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
 		shader->setUniform("u_Model", transform->getModel());
-		shader->render(getEngine()->currentCam.lock()->getRendText(), false);*/
+		shader->render(getEngine()->currentCam.lock()->getRendText(), false);
 	}
 	else
 	{
