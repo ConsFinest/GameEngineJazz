@@ -46,6 +46,9 @@ private:
 	SDL_Window *window;
 	ALCdevice* device;
 	ALCcontext* ALcontext;
+	float deltaTime;
+	float lastTime;
+	float timeT;
 	
 };
 

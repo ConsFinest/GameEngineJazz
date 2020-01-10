@@ -36,8 +36,8 @@ add_library(GameEngine
 	src/GameEngine/camera.h
 	src/GameEngine/audioSource.h
 	src/GameEngine/audioSource.cpp
-	src/GameEngine/PBR.h
-	src/GameEngine/PBR.cpp
+	src/GameEngine/boxCollider.h
+	src/GameEngine/boxCollider.cpp
 	src/GameEngine/skyBox.h
 	src/GameEngine/skyBox.cpp
 

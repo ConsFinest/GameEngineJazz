@@ -18,7 +18,7 @@ std::shared_ptr<Engine> Engine::intialize()
 {
 	std::shared_ptr<Engine>eng = std::make_shared<Engine>();
 	eng->self = eng;
-
+	eng->deltaTime = 0;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		throw rend::Exception("SDL FAILED TO INITIALISE");
@@ -70,9 +70,23 @@ std::shared_ptr<Entity> Engine::addEntity()
 void Engine::start()
 {
 	running = true;
+	
+	lastTime = SDL_GetTicks();
 
 	while (running)
 	{
+		//DELTATIME
+		timeT = SDL_GetTicks();
+		float diff = timeT - lastTime;
+		float deltaTime = diff / 1000.0f;
+		lastTime = timeT;
+		float idealTime = 1.0f / 60.0f;
+		if (idealTime > deltaTime)
+		{
+			SDL_Delay((idealTime - deltaTime)*1000.0f);
+		}
+
+
 		glClearColor(0.10f, 0.15f, 0.25f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		SDL_Event event = { 0 };
