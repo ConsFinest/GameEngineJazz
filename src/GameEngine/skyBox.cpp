@@ -16,7 +16,7 @@ void Skybox::setTextToMesh()
 std::sr1::shared_ptr<rend::Shader> Skybox::createShader(const std::string & source)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
-	shader = eng->context->createShader();
+	shader = eng->getContext()->createShader();
 	shader->parse(source);
 	return shader;
 }
@@ -24,7 +24,7 @@ std::sr1::shared_ptr<rend::Shader> Skybox::createShader(const std::string & sour
 std::sr1::shared_ptr<rend::Shader> Skybox::createShaderFF(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
-	shader = eng->context->createShader();
+	shader = eng->getContext()->createShader();
 	{
 		std::fstream f(_loc.c_str());
 
@@ -51,7 +51,7 @@ std::sr1::shared_ptr<rend::Shader> Skybox::createShaderFF(const std::string _loc
 std::sr1::shared_ptr<rend::Mesh> Skybox::createMesh(const std::string _loc, bool _conversion)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
-	mesh = eng->context->createMesh();
+	mesh = eng->getContext()->createMesh();
 	{
 		std::ifstream f(_loc.c_str());
 		if (!f.is_open())
@@ -77,7 +77,7 @@ std::sr1::shared_ptr<rend::Mesh> Skybox::createMesh(const std::string _loc, bool
 std::sr1::shared_ptr<rend::Texture> Skybox::createTexture(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
-	texture = eng->context->createTexture();
+	texture = eng->getContext()->createTexture();
 	{
 		int w = 0;
 		int h = 0;

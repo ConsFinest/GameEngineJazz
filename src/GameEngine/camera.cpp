@@ -3,18 +3,43 @@
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 760
 
-glm::vec3 Camera::getPos()
+void Camera::setNotCurrent()
 {
-	return camPos;
+	currentCam = false;
 }
 
-//To Do - destruction remove camera from list inside engine
+void Camera::setCurrent(bool _set)
+{
+	currentCam = _set;
+	std::vector<std::sr1::weak_ptr<Camera>> cameras;
+	cameras = getEngine()->cameras;
+	for (auto it = cameras.begin(); it != cameras.end(); it++)
+	{
+		std::shared_ptr<Camera> cam = (*it).lock();
+		if (cam->getEntity() != getEntity())
+		{
+			cam->setNotCurrent();
+		}
+	}
+}
+
+bool Camera::getCurrent()
+{
+	return currentCam;
+}
+
+glm::vec3 Camera::getPos()
+{
+	std::sr1::shared_ptr<Entity> ent = getEntity();
+	std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
+	return transform->getPos();
+}
+
+//ToDo - destruction remove camera from list inside engine
 
 glm::mat4 Camera::getView()
 {
-	/*glm::mat4 model(1.0f);
-	viewMat = glm::translate(model, camPos);
-	viewMat = glm::rotate(viewMat, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));*/
+
 	std::sr1::shared_ptr<Entity> ent = getEntity();
 	std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
 	
@@ -35,6 +60,7 @@ void Camera::setRendText()
 
 void Camera::cameraInit(float _angle)
 {
+	windowLock = true;
 	angle = _angle;
 	camPos = glm::vec3(0, 0, 0);
 	std::sr1::shared_ptr<Entity> ent = getEntity();
@@ -42,6 +68,14 @@ void Camera::cameraInit(float _angle)
 	camPos = transform->getPos();
 	std::sr1::shared_ptr<Engine> eng = getEngine();
 	eng->cameras.push_back(ent->getComponent<Camera>());
+
+	glm::mat4 t(1.0f);
+	t = glm::translate(t, glm::vec3(0, 1, 0));
+	Up = t * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	Up = glm::normalize(Up);
+	updateCamVectors();
+
+
 }
 
 std::sr1::shared_ptr<rend::RenderTexture> Camera::getRendText()
@@ -51,9 +85,86 @@ std::sr1::shared_ptr<rend::RenderTexture> Camera::getRendText()
 
 void Camera::onTick()
 {
-	/*std::sr1::shared_ptr<Entity> ent = getEntity();
-	std::sr1::shared_ptr<Transform> trans = ent->getComponent<Transform>();
-	trans->addRot(glm::vec3(0, -0.1, 0));*/
+	float movementSpeed = 10.0f;
+	float rotationSpeed = 20.0f;
+	float deltaTime = getEngine()->getDeltaTime();
+	movementSpeed = movementSpeed * deltaTime;
+	rotationSpeed = rotationSpeed * deltaTime;
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+	if (playerControlled)
+	{
+		std::shared_ptr<Engine> eng = getEngine();
+		std::sr1::shared_ptr<Entity> ent = getEntity();
+		std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
+		glm::vec3 pos = transform->getPos();
+		glm::vec3 rot = transform->getRot();
+		std::shared_ptr<Input> inp = getEngine()->getInput();
+		
+		if (inp->keyDown(SDL_SCANCODE_L))
+		{
+			if (windowLock)
+			{
+				SDL_ShowCursor(1);
+				SDL_SetWindowGrab(eng->getWindow(), SDL_FALSE);
+				windowLock = false;
+			}
+			if (!windowLock)
+			{
+				SDL_ShowCursor(0);
+				SDL_SetWindowGrab(eng->getWindow(), SDL_TRUE);
+				SDL_WarpMouseInWindow(eng->getWindow(), WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+				windowLock = true;
+			}
+		}
+		if (inp->keyDown(SDL_SCANCODE_W))
+		{
+			std::cout << "moving forward" << std::endl;
+			pos += Front * movementSpeed;
+		}
+		if (inp->keyDown(SDL_SCANCODE_S))
+		{
+			std::cout << "moving backwards" << std::endl;
+			pos -= Front * movementSpeed;
+		}
+		if (inp->keyDown(SDL_SCANCODE_A))
+		{
+			std::cout << "moving left" << std::endl;
+			pos -= Right * movementSpeed;
+		}
+		if (inp->keyDown(SDL_SCANCODE_D))
+		{
+			std::cout << "moving right" << std::endl;
+			pos += Right * movementSpeed;
+		}
+		updateCamVectors();
+		transform->addRot({-(inp->getMousePos().x * rotationSpeed), -(inp->getMousePos().y * rotationSpeed), 0 });
+		transform->setPos(pos);
+		
+	}
+	
+}
+
+void Camera::playerControll(bool _value)
+{
+	playerControlled = _value;
+}
+
+void Camera::updateCamVectors()
+{
+	std::sr1::shared_ptr<Entity> ent = getEntity();
+	std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
+	glm::vec3 rot = transform->getRot();
+	glm::mat4 t(1.0f);
+	t = glm::rotate(t, glm::radians(rot.x), glm::vec3(0, 1, 0));
+	t = glm::translate(t, glm::vec3(0, 0, -1));
+	Front = t * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	Front = glm::normalize(Front);
+
+	t = glm::mat4(1.0f);
+	t = glm::rotate(t, glm::radians(rot.x), glm::vec3(0, 1, 0));
+	t = glm::translate(t, glm::vec3(1, 0, 0));
+	Right = t * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	Right = glm::normalize(Right);
 }
 
 

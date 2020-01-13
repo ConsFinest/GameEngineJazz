@@ -40,8 +40,10 @@ add_library(GameEngine
 	src/GameEngine/boxCollider.cpp
 	src/GameEngine/skyBox.h
 	src/GameEngine/skyBox.cpp
-
-
+	src/GameEngine/input.h
+	src/GameEngine/input.cpp
+	src/GameEngine/GUI.h
+	src/GameEngine/GUI.cpp
 
 )
 target_link_libraries(GameEngine SDL2 rend OpenAl32)

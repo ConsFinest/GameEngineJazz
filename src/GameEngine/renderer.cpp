@@ -24,7 +24,7 @@ void Renderer::setTextToMesh()
 std::sr1::shared_ptr<rend::Shader> Renderer::createShader(const std::string & source)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
-	shader = eng->context->createShader();
+	shader = eng->getContext()->createShader();
 	shader->parse(source);
 	return shader;
 }
@@ -32,7 +32,7 @@ std::sr1::shared_ptr<rend::Shader> Renderer::createShader(const std::string & so
 std::sr1::shared_ptr<rend::Shader> Renderer::createShaderFF(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
-	shader = eng->context->createShader();
+	shader = eng->getContext()->createShader();
 	{
 		std::fstream f(_loc.c_str());
 
@@ -57,10 +57,10 @@ std::sr1::shared_ptr<rend::Shader> Renderer::createShaderFF(const std::string _l
 
 }
 
-std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc, bool _conversion)
+std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
-	mesh = eng->context->createMesh();
+	mesh = eng->getContext()->createMesh();
 	{
 		std::ifstream f(_loc.c_str());
 		if (!f.is_open())
@@ -86,7 +86,7 @@ std::sr1::shared_ptr<rend::Mesh> Renderer::createMesh(const std::string _loc, bo
 std::sr1::shared_ptr<rend::Texture> Renderer::createTexture(const std::string _loc)
 {
 	std::sr1::shared_ptr<Engine> eng = getEngine();
-	texture = eng->context->createTexture();
+	texture = eng->getContext()->createTexture();
 	{
 		int w = 0;
 		int h = 0;
@@ -130,11 +130,11 @@ std::shared_ptr<Camera> Renderer::setCamera(std::shared_ptr<Camera> _cam)
 void Renderer::rendererInit(const std::string & source, const std::string _mesh, const std::string _text)
 {
 	shader = createShaderFF(source);
-	mesh = createMesh(_mesh, false);
+	mesh = createMesh(_mesh);
 	texture = createTexture(_text);
-	spare = getEngine()->getContext()->createTexture();
 	mesh->setTexture("u_Texture", texture);
 	shader->setMesh(mesh);
+	std::cout << "renderer init" << std::endl;
 
 }
 
@@ -143,8 +143,9 @@ void Renderer::onDisplay()
 
 		std::sr1::shared_ptr<Entity> ent = getEntity();
 		std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
+		glEnable(GL_DEPTH_TEST);
 
-		std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
+		//std::cout << transform->getPos().x << " " << transform->getPos().y << " " << transform->getPos().z << std::endl;
 	
 		shader->setUniform("u_LightPos", glm::vec3(0, 0, 5));
 		
@@ -153,18 +154,7 @@ void Renderer::onDisplay()
 		
 		if (getEngine()->currentCam.lock()->getRendText() != NULL)
 		{
-			shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
-			shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
-			shader->setUniform("u_Model", transform->getModel());
-			//getEngine()->currentCam.lock()->getRendText()->setTexId(spare->getId());
-			shader->render(getEngine()->currentCam.lock()->getRendText(),spare->getId());
-			mesh->setTexture("u_Texture", spare);
-			shader->setMesh(mesh);
 			
-			/*shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
-			shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
-			shader->setUniform("u_Model", transform->getModel());
-			shader->render();*/
 		}
 		else
 		{

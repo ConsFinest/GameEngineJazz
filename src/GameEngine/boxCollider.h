@@ -6,13 +6,15 @@
 class Engine;
 class Entity;
 class Transform;
+class Camera;
 
 class boxCollider : public Component
 {
-	void onTick();
+	
+	void onCollideBox();
 	glm::vec3 size;
 	glm::vec3 offset;
-	glm::vec3 position;
+	glm::vec3 lastPosition;
 
 
 
@@ -22,7 +24,7 @@ class boxCollider : public Component
 public:
 
 	void onInit();
-
+	void onTick();
 	void setSize(glm::vec3 size);
 	void setOffset(glm::vec3 _offset);
 

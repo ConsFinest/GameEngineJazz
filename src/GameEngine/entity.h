@@ -15,6 +15,7 @@ class Entity
 {
 	friend Engine;
 
+	bool skybox = false;
 	std::weak_ptr<Engine> engine;
 	std::weak_ptr<Entity> self;
 	std::vector<std::shared_ptr<Component>> components;
@@ -22,6 +23,9 @@ class Entity
 	void display();
 	
 public:
+
+	void setSkyBox(bool _set);
+	bool getSkyBox();
 	//template dont need ;
 	//template perameter forwarding - LOOK UP 
 	std::shared_ptr<Engine> getEngine();
@@ -72,6 +76,19 @@ public:
 		{
 			throw rend::Exception("COMPONENT TYPE COULD NOT BE FOUND");
 		}
+	}
+	template<class T>
+	bool searchComponents()
+	{
+		for (auto it = components.begin(); it != components.end(); it++)
+		{
+			std::shared_ptr<T> rtn = std::dynamic_pointer_cast<T>(*it);
+			if (rtn)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 };
 

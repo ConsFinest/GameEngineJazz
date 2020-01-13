@@ -10,9 +10,7 @@ class Renderer: public Component
 	GLuint programId;
 	GLuint vaoId;
 	std::sr1::shared_ptr<rend::Mesh> mesh;
-	std::sr1::shared_ptr<rend::Mesh> meshSky;
 	std::sr1::shared_ptr<rend::Texture> texture;
-	std::sr1::shared_ptr<rend::Texture> spare;
 	std::sr1::shared_ptr<rend::Shader> shader;
 	
 	
@@ -26,7 +24,7 @@ public:
 	int count = 0; 
 	std::sr1::shared_ptr<rend::Shader> createShader(const std::string &source);
 	std::sr1::shared_ptr<rend::Shader> createShaderFF(const std::string _loc);
-	std::sr1::shared_ptr<rend::Mesh> createMesh(const std::string _loc, bool _conversion);
+	std::sr1::shared_ptr<rend::Mesh> createMesh(const std::string _loc);
 	std::sr1::shared_ptr<rend::Texture> createTexture(const std::string _loc);
 	
 	std::shared_ptr<Camera> setCamera(std::shared_ptr<Camera> _cam);

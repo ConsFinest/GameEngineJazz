@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "entity.h"
+#include "input.h"
 
 
 #define WINDOW_WIDTH 1024
@@ -53,8 +54,10 @@ std::shared_ptr<Engine> Engine::intialize()
 		throw rend::Exception("CONTEXT NOT MADE CURRENT");
 	}
 	alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+	//init context
 	eng->context = rend::Context::initialize();
-
+	//init inputmanager
+	eng->input = Input::init();
 	return eng;
 }
 
@@ -69,6 +72,7 @@ std::shared_ptr<Entity> Engine::addEntity()
 
 void Engine::start()
 {
+	
 	running = true;
 	
 	lastTime = SDL_GetTicks();
@@ -78,7 +82,7 @@ void Engine::start()
 		//DELTATIME
 		timeT = SDL_GetTicks();
 		float diff = timeT - lastTime;
-		float deltaTime = diff / 1000.0f;
+		deltaTime = diff / 1000.0f;
 		lastTime = timeT;
 		float idealTime = 1.0f / 60.0f;
 		if (idealTime > deltaTime)
@@ -96,21 +100,48 @@ void Engine::start()
 			{
 				running = false;
 			}
+			switch(event.type)
+			{
+			case SDL_KEYDOWN:
+				//std::cout << "keypress" << std::endl;
+				input->addKey(event.key.keysym.scancode);
+				break;
+			case SDL_KEYUP:
+				input->removeKey(event.key.keysym.scancode);
+				break;
+			default:
+				break;
+			}
+			if (event.type == SDL_MOUSEMOTION)
+			{
+				if (!firstMouse)
+				{
+					input->setMousePos(event.motion.xrel, event.motion.yrel);
+				}
+				else
+				{
+					firstMouse = false;
+					input->setMousePos(0, 0);
+				}
+			}
 		}
 		
 		for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
 		{
 			(*it)->tick();
+			
 		}
 		for (std::vector<std::weak_ptr<Camera>>::iterator camIt = cameras.begin(); camIt != cameras.end(); camIt++)
 		{
-			currentCam = *camIt;
+			//TODO work this out 
+			currentCam = getCurrentCam();
 
 			for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
 			{
 				(*it)->display();
 			}
 		}
+		input->onTick();
 		SDL_GL_SwapWindow(window);
 	}
 
@@ -125,6 +156,41 @@ std::sr1::shared_ptr<rend::Context> Engine::getContext()
 {
 	return context;
 }
+
+float Engine::getDeltaTime()
+{
+	return deltaTime;
+}
+
+SDL_Window * Engine::getWindow()
+{
+	return window;
+}
+
+std::weak_ptr<Camera> Engine::getCurrentCam()
+{
+
+	for (auto it = cameras.begin(); it != cameras.end(); it++)
+	{
+		//std::shared_ptr<Camera> cam = (*it).lock();
+		if ((*it).lock()->getCurrent())
+		{
+			return *it;
+		}
+	}
+}
+
+
+
+std::shared_ptr<Input> Engine::getInput()
+{
+	return input;
+}
+
+
+	
+
+
 
 
 

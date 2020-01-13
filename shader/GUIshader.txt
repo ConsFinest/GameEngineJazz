@@ -1,0 +1,29 @@
+#ifdef VERTEX
+attribute vec2 a_Position;
+attribute vec2 a_TexCoords;
+
+uniform mat4 u_Projection;
+uniform mat4 u_Model;
+
+varying vec2 ex_TexCoords;
+
+void main()
+{
+ gl_Position = u_Projection * u_Model * vec4(a_Position, 0, 1);
+ ex_TexCoords = a_TexCoords;
+} 
+
+#endif
+#ifdef FRAGMENT
+
+uniform sampler2D u_Texture;
+varying vec2 ex_TexCoords;
+
+
+void main()
+{
+  vec4 tex = texture2D(u_Texture, ex_TexCoords);
+  gl_FragColor = tex;
+}
+
+#endif

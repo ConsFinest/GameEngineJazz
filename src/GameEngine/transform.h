@@ -3,7 +3,6 @@
 
 #include "component.h"
 
-
 class Transform : public Component
 {
 	glm::vec3 Position;

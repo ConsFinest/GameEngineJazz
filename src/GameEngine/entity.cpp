@@ -6,7 +6,7 @@ void Entity::tick()
 	for (std::vector<std::shared_ptr<Component>>::iterator it = components.begin(); it != components.end(); it++)
 	{
 		(*it)->onTick();
-		//std::cout << "Components updated" << std::endl;
+	    //std::cout << "Components updated" << std::endl;
 	}
 }
 
@@ -17,6 +17,16 @@ void Entity::display()
 		(*it)->onDisplay();
 		//std::cout << "Components updated" << std::endl;
 	}
+}
+
+void Entity::setSkyBox(bool _set)
+{
+	skybox = _set;
+}
+
+bool Entity::getSkyBox()
+{
+	return skybox;
 }
 
 std::shared_ptr<Engine> Entity::getEngine()

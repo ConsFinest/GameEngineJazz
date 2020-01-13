@@ -15,6 +15,7 @@ void Component::onTick()
 void Component::onDisplay()
 {
 	//std::cout << "Components Drawn" << std::endl; 
+
 }
 
 std::shared_ptr<Entity> Component::getEntity()
