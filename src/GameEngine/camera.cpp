@@ -8,9 +8,10 @@ void Camera::setNotCurrent()
 	currentCam = false;
 }
 
-void Camera::setCurrent(bool _set)
+void Camera::setCurrent()
 {
-	currentCam = _set;
+	//TODO revise this function so everything isn't always false
+	currentCam = true;
 	std::vector<std::sr1::weak_ptr<Camera>> cameras;
 	cameras = getEngine()->cameras;
 	for (auto it = cameras.begin(); it != cameras.end(); it++)

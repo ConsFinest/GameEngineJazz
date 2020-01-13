@@ -124,6 +124,14 @@ void Engine::start()
 					input->setMousePos(0, 0);
 				}
 			}
+			if (input->keyPressed(SDL_SCANCODE_EQUALS))
+			{
+				nextCam();
+			}
+			if (input->keyPressed(SDL_SCANCODE_MINUS))
+			{
+				prevCam();
+			}
 		}
 		
 		for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
@@ -169,10 +177,8 @@ SDL_Window * Engine::getWindow()
 
 std::weak_ptr<Camera> Engine::getCurrentCam()
 {
-
 	for (auto it = cameras.begin(); it != cameras.end(); it++)
 	{
-		//std::shared_ptr<Camera> cam = (*it).lock();
 		if ((*it).lock()->getCurrent())
 		{
 			return *it;
@@ -180,7 +186,46 @@ std::weak_ptr<Camera> Engine::getCurrentCam()
 	}
 }
 
+void Engine::nextCam()
+{
+	bool cam = false;
+	for (auto it = cameras.begin(); it != cameras.end(); it++)
+	{
+		if (cam)
+		{
+			(*it).lock()->setCurrent();
+		}
+		if ((*it).lock()->getCurrent())
+		{
+			cam = true;
+		}
+	}
+}
 
+void Engine::prevCam()
+{
+	bool cam = false;
+	for (auto it = cameras.begin(); it != cameras.end();)
+	{
+		
+		if (cam)
+		{
+			(*it).lock()->setCurrent();
+			return;
+		}
+		if ((*it).lock()->getCurrent())
+		{
+			cam = true;
+			it--;
+		}
+		if (!cam)
+		{
+			it++;
+		}
+		
+		
+	}
+}
 
 std::shared_ptr<Input> Engine::getInput()
 {

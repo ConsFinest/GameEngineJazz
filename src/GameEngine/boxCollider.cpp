@@ -24,12 +24,26 @@ void boxCollider::onCollideBox()
 		}
 		
 			std::shared_ptr<boxCollider> bc = (*it)->getComponent<boxCollider>();
-			glm::vec3 sp = bc->collisionResponse(np, size);
-			np = sp;
-			np = np - offset;
-			getEntity()->getComponent<Transform>()->setPos(np);
-			lastPosition = np;
+			//TODO stop objects being pushed
+			if (bc->getMoveable())
+			{
+				glm::vec3 sp = bc->collisionResponse(np, size);
+				np = sp;
+				np = np - offset;
+				getEntity()->getComponent<Transform>()->setPos(np);
+				lastPosition = np;
+			}
 	}
+}
+
+void boxCollider::setMoveable(bool _set)
+{
+	moveable = _set;
+}
+
+bool boxCollider::getMoveable()
+{
+	return moveable;
 }
 
 void boxCollider::onInit()

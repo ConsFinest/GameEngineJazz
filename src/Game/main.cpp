@@ -26,6 +26,7 @@ int main()
 	std::shared_ptr<Renderer> rend = entity->addComponent<Renderer>();
 	std::shared_ptr<boxCollider> boxColEnt = entity->addComponent<boxCollider>();
 	boxColEnt->setSize({ 1,1,1 });
+	boxColEnt->setMoveable(false);
 
 	std::shared_ptr<Entity> GuiEnt = engine->addEntity();
 	std::shared_ptr<GUI> gui = GuiEnt->addComponent<GUI>();
@@ -35,9 +36,10 @@ int main()
 	std::shared_ptr<Transform> trans = camEnt->addComponent<Transform>();
 	trans->setPos(glm::vec3(0, 0, 5));
 	std::shared_ptr<boxCollider> boxCol = camEnt->addComponent<boxCollider>();
+	boxCol->setMoveable(true);
 	boxCol->setSize({ 1,1,1 });
 	std::shared_ptr<Camera> cam = camEnt->addComponent<Camera>();
-	cam->setCurrent(true);
+	cam->setCurrent();
 	cam->playerControll(true);
 	cam->cameraInit(60);
 
@@ -45,9 +47,10 @@ int main()
 	std::shared_ptr<Transform> trans2 = camEnt2->addComponent<Transform>();
 	trans2->setPos(glm::vec3(0, 10, 5));
 	std::shared_ptr<boxCollider> boxCol2 = camEnt2->addComponent<boxCollider>();
+	
 	boxCol2->setSize({ 1,1,1 });
 	std::shared_ptr<Camera> cam2 = camEnt2->addComponent<Camera>();
-	cam2->setCurrent(false);
+	//cam2->setCurrent();
 	cam2->playerControll(true);
 	cam2->cameraInit(60);
 

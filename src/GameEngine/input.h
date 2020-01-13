@@ -24,6 +24,7 @@ class Input
 	glm::vec2 getMousePos();
 
 	bool keyDown(SDL_Keycode _key);
+	bool keyPressed(SDL_Keycode _key);
 	bool keyUp(SDL_Keycode _key);
 
 	void onTick();

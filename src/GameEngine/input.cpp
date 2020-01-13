@@ -64,6 +64,18 @@ bool Input::keyDown(SDL_Keycode _key)
 	return false;
 }
 
+bool Input::keyPressed(SDL_Keycode _key)
+{
+	for (auto it = pressedKeys.begin(); it != pressedKeys.end(); it++) 
+	{
+		if (*it == _key)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 bool Input::keyUp(SDL_Keycode _key)
 {
 	for (auto it = releasedKeys.begin(); it != releasedKeys.end(); it++)

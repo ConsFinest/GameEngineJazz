@@ -17,6 +17,7 @@ Transform::Transform(glm::vec3 _pos, glm::vec3 _rot, glm::vec3 _scale)
 
 void Transform::setPos(glm::vec3 _Pos)
 {
+	//TODO make skybox move with cam
 	Position = _Pos;
 	std::shared_ptr<Entity> ent = getEntity();
 	if (!ent->getSkyBox())

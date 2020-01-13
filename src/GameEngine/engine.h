@@ -39,8 +39,10 @@ public:
 	std::sr1::shared_ptr<rend::Context> getContext();
 	float getDeltaTime();
 	SDL_Window* getWindow();
-	std::weak_ptr<Camera> getCurrentCam();
 
+	std::weak_ptr<Camera> getCurrentCam();
+	void nextCam();
+	void prevCam();
 	std::sr1::weak_ptr<Camera> currentCam;
 	//To do make camera vector private
 	std::vector<std::sr1::weak_ptr<Camera>> cameras;

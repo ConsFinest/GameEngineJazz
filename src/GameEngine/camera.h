@@ -24,7 +24,7 @@ class Camera : public Component
 public:
 
 	void setNotCurrent();
-	void setCurrent(bool _set);
+	void setCurrent();
 	bool getCurrent();
 	glm::vec3 getPos();
 	glm::mat4 getView();
