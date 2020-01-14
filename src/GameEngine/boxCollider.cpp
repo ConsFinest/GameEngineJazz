@@ -23,16 +23,16 @@ void boxCollider::onCollideBox()
 			continue;
 		}
 		
-			std::shared_ptr<boxCollider> bc = (*it)->getComponent<boxCollider>();
-			//TODO stop objects being pushed
-			if (bc->getMoveable())
-			{
-				glm::vec3 sp = bc->collisionResponse(np, size);
-				np = sp;
-				np = np - offset;
-				getEntity()->getComponent<Transform>()->setPos(np);
-				lastPosition = np;
-			}
+		std::shared_ptr<boxCollider> bc = (*it)->getComponent<boxCollider>();
+	
+		if (getMoveable()) //stops objects being able to push each other 
+		{
+			glm::vec3 sp = bc->collisionResponse(np, size);
+			np = sp;
+			np = np - offset;
+			getEntity()->getComponent<Transform>()->setPos(np);
+			lastPosition = np;
+		}
 	}
 }
 
@@ -50,7 +50,15 @@ void boxCollider::onInit()
 {
 	size = glm::vec3(1, 1, 1);
 	lastPosition = getEntity()->getComponent<Transform>()->getPos();
+	moveable = true;
 	
+}
+
+void boxCollider::onInit(glm::vec3 _size, bool _move)
+{
+	size = _size;
+	lastPosition = getEntity()->getComponent<Transform>()->getPos();
+	moveable = _move;
 }
 
 void boxCollider::setSize(glm::vec3 size)

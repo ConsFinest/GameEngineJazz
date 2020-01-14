@@ -44,6 +44,8 @@ add_library(GameEngine
 	src/GameEngine/input.cpp
 	src/GameEngine/GUI.h
 	src/GameEngine/GUI.cpp
+	src/GameEngine/playerController.h
+	src/GameEngine/playerController.cpp
 
 )
 target_link_libraries(GameEngine SDL2 rend OpenAl32)

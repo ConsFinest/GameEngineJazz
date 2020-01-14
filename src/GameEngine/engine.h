@@ -2,6 +2,9 @@
 #define _ENGINE_H_
 
 
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 760
+
 #include <iostream>
 #include <memory>
 #include <vector>

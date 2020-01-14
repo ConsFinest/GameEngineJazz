@@ -94,7 +94,7 @@ void Camera::onTick()
 	movementSpeed = movementSpeed * deltaTime;
 	rotationSpeed = rotationSpeed * deltaTime;
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-	
+	//TO DO move to player controller
 	if (playerControlled && getCurrent())
 	{
 		

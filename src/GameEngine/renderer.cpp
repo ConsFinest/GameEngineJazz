@@ -149,7 +149,7 @@ void Renderer::onDisplay()
 	
 		shader->setUniform("u_LightPos", glm::vec3(0, 0, 5));
 		
-		shader->setUniform("u_Emissive", glm::vec3(0, 0, 0));
+		shader->setUniform("u_Emissive", glm::vec3(0.2, 0.2, 0.2));
 		shader->setUniform("u_Ambient", glm::vec3(0.0, 0.0, 0.0));
 		
 		if (getEngine()->currentCam.lock()->getRendText() != NULL)
