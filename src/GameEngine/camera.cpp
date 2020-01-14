@@ -94,7 +94,8 @@ void Camera::onTick()
 	movementSpeed = movementSpeed * deltaTime;
 	rotationSpeed = rotationSpeed * deltaTime;
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-	if (playerControlled &&eng->checkIfCurrent())
+	
+	if (playerControlled && getCurrent())
 	{
 		
 		std::sr1::shared_ptr<Entity> ent = getEntity();

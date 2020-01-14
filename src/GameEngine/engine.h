@@ -41,7 +41,7 @@ public:
 	SDL_Window* getWindow();
 
 	std::weak_ptr<Camera> getCurrentCam();
-	bool checkIfCurrent();
+	
 	void nextCam();
 	void prevCam();
 	std::sr1::weak_ptr<Camera> currentCam;

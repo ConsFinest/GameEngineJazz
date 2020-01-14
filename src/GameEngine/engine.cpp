@@ -179,6 +179,8 @@ SDL_Window * Engine::getWindow()
 	return window;
 }
 
+
+
 std::weak_ptr<Camera> Engine::getCurrentCam()
 {
 	for (auto it = cameras.begin(); it != cameras.end(); it++)
@@ -186,17 +188,6 @@ std::weak_ptr<Camera> Engine::getCurrentCam()
 		if ((*it).lock()->getCurrent())
 		{
 			return *it;
-		}
-	}
-}
-
-bool Engine::checkIfCurrent()
-{
-	for (auto it = cameras.begin(); it != cameras.end(); it++)
-	{
-		if ((*it).lock()->getCurrent())
-		{
-			return true;
 		}
 	}
 }
