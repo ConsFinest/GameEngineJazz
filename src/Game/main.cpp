@@ -82,3 +82,4 @@ int main()
 
 //TODO add static mesh Collider
 //TODO stop being able to push colliders around
+//TODO fix cameras being in same pos lmaoin playercontroller

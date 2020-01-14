@@ -76,9 +76,10 @@ void Engine::start()
 	running = true;
 	
 	lastTime = SDL_GetTicks();
-
+	int i =0;
 	while (running)
 	{
+		
 		//DELTATIME
 		timeT = SDL_GetTicks();
 		float diff = timeT - lastTime;
@@ -127,6 +128,8 @@ void Engine::start()
 			if (input->keyPressed(SDL_SCANCODE_EQUALS))
 			{
 				nextCam();
+				std::cout << i << std::endl;
+				std::cout << "keypress" << std::endl;
 			}
 			if (input->keyPressed(SDL_SCANCODE_MINUS))
 			{
@@ -154,6 +157,7 @@ void Engine::start()
 	}
 
 }
+
 
 void Engine::stop()
 {
@@ -186,6 +190,17 @@ std::weak_ptr<Camera> Engine::getCurrentCam()
 	}
 }
 
+bool Engine::checkIfCurrent()
+{
+	for (auto it = cameras.begin(); it != cameras.end(); it++)
+	{
+		if ((*it).lock()->getCurrent())
+		{
+			return true;
+		}
+	}
+}
+
 void Engine::nextCam()
 {
 	bool cam = false;
@@ -205,25 +220,18 @@ void Engine::nextCam()
 void Engine::prevCam()
 {
 	bool cam = false;
-	for (auto it = cameras.begin(); it != cameras.end();)
+	for (auto it = cameras.begin(); it != cameras.end();it++)
 	{
-		
-		if (cam)
-		{
-			(*it).lock()->setCurrent();
-			return;
-		}
 		if ((*it).lock()->getCurrent())
 		{
 			cam = true;
-			it--;
+			if(it != cameras.begin())
+			{
+				it--;
+			}
+			(*it).lock()->setCurrent();
+			return;
 		}
-		if (!cam)
-		{
-			it++;
-		}
-		
-		
 	}
 }
 

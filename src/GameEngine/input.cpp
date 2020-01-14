@@ -90,8 +90,10 @@ bool Input::keyUp(SDL_Keycode _key)
 
 void Input::onTick()
 {
+	
 	pressedKeys.clear();
 	releasedKeys.clear();
 	MouseX = 0;
 	MouseY = 0;
+	
 }

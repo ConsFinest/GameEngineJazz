@@ -86,15 +86,17 @@ std::sr1::shared_ptr<rend::RenderTexture> Camera::getRendText()
 
 void Camera::onTick()
 {
+	std::shared_ptr<Engine> eng = getEngine();
+	
 	float movementSpeed = 10.0f;
 	float rotationSpeed = 20.0f;
 	float deltaTime = getEngine()->getDeltaTime();
 	movementSpeed = movementSpeed * deltaTime;
 	rotationSpeed = rotationSpeed * deltaTime;
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-	if (playerControlled)
+	if (playerControlled &&eng->checkIfCurrent())
 	{
-		std::shared_ptr<Engine> eng = getEngine();
+		
 		std::sr1::shared_ptr<Entity> ent = getEntity();
 		std::sr1::shared_ptr<Transform> transform = ent->getComponent<Transform>();
 		glm::vec3 pos = transform->getPos();
@@ -140,7 +142,7 @@ void Camera::onTick()
 		updateCamVectors();
 		transform->addRot({-(inp->getMousePos().x * rotationSpeed), -(inp->getMousePos().y * rotationSpeed), 0 });
 		transform->setPos(pos);
-		
+		//TODO make camera angles be seperate
 	}
 	
 }
