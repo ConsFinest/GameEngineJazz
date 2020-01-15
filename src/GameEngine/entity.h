@@ -9,8 +9,6 @@
 class Engine;
 class Component;
 
-
-
 class Entity
 {
 	friend Engine;

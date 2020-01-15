@@ -14,6 +14,8 @@
 #include <GameEngine/boxCollider.h>
 #include <GameEngine/GUI.h>
 #include <GameEngine/skyBox.h>
+#include <GameEngine/playerController.h>
+#include <GameEngine/physics.h>
 #include <memory>
 
 
@@ -25,28 +27,16 @@ int main()
 	std::shared_ptr<GUI> gui = GuiEnt->addComponent<GUI>();
 	gui->GUIInit("../shader/GUIshader.txt", { 150,150,1 }, "../samples/crosshair.png", { WINDOW_WIDTH/2-75,WINDOW_HEIGHT/2-75 });
 
-
-
-	std::shared_ptr<Entity> camEnt = engine->addEntity();
-	std::shared_ptr<Transform> trans = camEnt->addComponent<Transform>();
-	trans->setPos(glm::vec3(0, 0, 5));
-	std::shared_ptr<boxCollider> boxCol = camEnt->addComponent<boxCollider>();
-	boxCol->setMoveable(true);
-	boxCol->setSize({ 1,1,1 });
-	std::shared_ptr<Camera> cam = camEnt->addComponent<Camera>();
-	cam->setCurrent();
-	cam->playerControll(true);
-	cam->cameraInit(60);
-
-	std::shared_ptr<Entity> camEnt2 = engine->addEntity();
-	std::shared_ptr<Transform> trans2 = camEnt2->addComponent<Transform>();
-	trans2->setPos(glm::vec3(0, 10, 5));
-	std::shared_ptr<boxCollider> boxCol2 = camEnt2->addComponent<boxCollider>();
 	
-	boxCol2->setSize({ 1,1,1 });
-	std::shared_ptr<Camera> cam2 = camEnt2->addComponent<Camera>();
-	cam2->playerControll(true);
-	cam2->cameraInit(60);
+	
+	
+	std::shared_ptr<Entity> camEnt2 = engine->addCamera({ 0,10,5 }, false, 60);
+	std::shared_ptr<boxCollider> boxCol2 = camEnt2->addComponent<boxCollider>();
+	boxCol2->onInit({ 1,1,1 } ,true);
+	std::shared_ptr<PlayerController> pc2 = camEnt2->addComponent<PlayerController>();
+	pc2->pcInit();
+	std::shared_ptr<Renderer> rendcam = camEnt2->addComponent<Renderer>();
+	rendcam->rendererInit("../shader/shader.txt", "../samples/cube.obj", "../samples/white.png");
 
 	std::shared_ptr<Entity> skyBox = engine->addEntity();
 	std::shared_ptr<Transform> transform1 = skyBox->addComponent<Transform>(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -56,11 +46,20 @@ int main()
 	skyBox->setSkyBox(true);
 	skyRend->rendererInit("../shader/shader.txt", "../samples/PBRsphere/Skybox.obj", "../samples/PBRsphere/Mono_Lake_C_HiRes.jpg");
 
-	std::shared_ptr<Entity> player = engine->addEntity();
-	std::shared_ptr<Transform> pTrans = player->addComponent<Transform>(glm::vec3(1, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1.0f, 1.0f, 1.0f));
-	std::shared_ptr<Renderer> pRend = player->addComponent<Renderer>();
 
-	pRend->rendererInit("../shader/shader.txt", "../samples/PBRsphere/pbrSphere.obj", "../samples/PBRsphere/basecolor.png");
+	std::shared_ptr<Entity> camEnt = engine->addCamera({ 0,0,0 }, true, 60);
+
+	std::shared_ptr<Entity> player = engine->addEntity();
+	std::shared_ptr<Transform> pTrans = player->addComponent<Transform>(glm::vec3(1, 10, 0), glm::vec3(0, 0, 0), glm::vec3(1.0f, 1.0f, 1.0f));
+	std::shared_ptr<Renderer> pRend = player->addComponent<Renderer>();
+	std::shared_ptr<boxCollider> boxCol = player->addComponent<boxCollider>();
+	boxCol->onInit({ 1,1,1 }, true);
+	std::shared_ptr<PlayerController> pc = player->addComponent<PlayerController>();
+	pc->pcInit(camEnt, { 0,5,5 });
+	std::shared_ptr<Physics> pPhys = player->addComponent<Physics>();
+
+
+	pRend->rendererInit("../shader/shader.txt", "../samples/cube.obj", "../samples/PBRsphere/basecolor.png");
 
 
 	//Building level with cubes
@@ -104,7 +103,7 @@ int main()
 	std::shared_ptr<Renderer> cube5R = cube5->addComponent<Renderer>();
 	cube5R->rendererInit("../shader/shader.txt", "../samples/cube.obj", "../samples/white.png");
 
-	//std::shared_ptr<AudioSource> sound = entity->addComponent<AudioSource>();
+	//std::shared_ptr<AudioSource> sound = cube5->addComponent<AudioSource>();
 	//sound->audioSourceInit("../sounds/dixie_horn.ogg");
 	//sound->playAudio();
 	engine->start();

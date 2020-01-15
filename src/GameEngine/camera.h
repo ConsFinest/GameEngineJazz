@@ -20,6 +20,8 @@ class Camera : public Component
 	glm::vec3 Up;
 	bool windowLock;
 	bool currentCam;
+	glm::vec3 offset;
+
 
 public:
 
@@ -34,7 +36,6 @@ public:
 	std::sr1::shared_ptr<rend::RenderTexture> getRendText();
 	virtual void onTick();
 	void playerControll(bool _value);
-	void updateCamVectors();
 
 };
 

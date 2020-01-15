@@ -70,6 +70,24 @@ std::shared_ptr<Entity> Engine::addEntity()
 	return ent;
 }
 
+std::shared_ptr<Entity> Engine::addCamera(glm::vec3 _pos, bool _setCurrent, int _angle)
+{
+	std::shared_ptr<Entity>ent = std::make_shared<Entity>();
+	entities.push_back(ent);
+	ent->engine = self;
+	ent->self = ent;
+	std::shared_ptr<Transform>trans = ent->addComponent<Transform>();
+	trans->setPos(_pos);
+	std::shared_ptr<Camera>cam = ent->addComponent<Camera>();
+	if (_setCurrent)
+	{
+		cam->setCurrent();
+	}
+	cam->playerControll(true);
+	cam->cameraInit(_angle);
+	return ent;
+}
+
 void Engine::start()
 {
 	
@@ -128,8 +146,8 @@ void Engine::start()
 			if (input->keyPressed(SDL_SCANCODE_EQUALS))
 			{
 				nextCam();
-				std::cout << i << std::endl;
-				std::cout << "keypress" << std::endl;
+				//std::cout << i << std::endl;
+				//std::cout << "keypress" << std::endl;
 			}
 			if (input->keyPressed(SDL_SCANCODE_MINUS))
 			{
@@ -178,8 +196,6 @@ SDL_Window * Engine::getWindow()
 {
 	return window;
 }
-
-
 
 std::weak_ptr<Camera> Engine::getCurrentCam()
 {

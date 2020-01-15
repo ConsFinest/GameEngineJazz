@@ -21,11 +21,11 @@
 #include "transform.h"
 #include "entity.h"
 
-
 class Camera;
 class Entity; //forward declare
 class boxCollider;
 class Input;
+class Physics;
 
 
 class Engine
@@ -36,7 +36,10 @@ public:
 	std::weak_ptr<Engine> self;
 	~Engine();
 	static std::sr1::shared_ptr<Engine> intialize();
+
 	std::shared_ptr<Entity> addEntity();
+	std::shared_ptr<Entity> addCamera(glm::vec3 _pos, bool _setCurrent, int _angle);
+	
 	void start();
 	void stop();
 	std::sr1::shared_ptr<rend::Context> getContext();
@@ -50,10 +53,7 @@ public:
 	std::sr1::weak_ptr<Camera> currentCam;
 	//To do make camera vector private
 	std::vector<std::sr1::weak_ptr<Camera>> cameras;
-
 	std::shared_ptr<Input> getInput();
-
-
 	template<class T> 
 	std::vector < std::shared_ptr<Entity>> getEntities()
 	{
@@ -69,12 +69,12 @@ public:
 		}
 		return ents;
 	}
+	
 
 
 private: 
 
 	std::sr1::shared_ptr<rend::Context> context;
-
 	std::vector<std::shared_ptr<Entity>> entities;
 	std::shared_ptr<Input> input;
 	bool running;

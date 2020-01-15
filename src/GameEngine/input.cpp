@@ -18,7 +18,7 @@ void Input::addKey(SDL_Keycode _key)
 			return;
 		}
 	}
-	std::cout << "keyadded: " << _key << std::endl;
+	//std::cout << "keyadded: " << _key << std::endl;
 	pressedKeys.push_back(_key);
 	keys.push_back(_key);
 }
@@ -30,7 +30,7 @@ void Input::removeKey(SDL_Keycode _key)
 	{
 		if (*it == _key)
 		{
-			std::cout << "keyremoved: " << _key << std::endl;
+			//std::cout << "keyremoved: " << _key << std::endl;
 			it = keys.erase(it);
 		}
 		else
@@ -44,7 +44,7 @@ void Input::setMousePos(int _x, int _y)
 {
 	MouseX = _x;
 	MouseY = _y;
-	std::cout << MouseX << " " << MouseY << std::endl;
+	//std::cout << MouseX << " " << MouseY << std::endl;
 }
 
 glm::vec2 Input::getMousePos()

@@ -2,11 +2,11 @@
 #include "entity.h"
 #include "transform.h"
 #include "engine.h"
+#include "physics.h"
 
 void boxCollider::onTick()
 {
 	onCollideBox();
-	//std::cout << "updated col box" << std::endl;
 }
 
 void boxCollider::onCollideBox()
@@ -24,13 +24,20 @@ void boxCollider::onCollideBox()
 		}
 		
 		std::shared_ptr<boxCollider> bc = (*it)->getComponent<boxCollider>();
-	
+		
 		if (getMoveable()) //stops objects being able to push each other 
 		{
 			glm::vec3 sp = bc->collisionResponse(np, size);
 			np = sp;
 			np = np - offset;
 			getEntity()->getComponent<Transform>()->setPos(np);
+			/*if (lastPosition.y == getEntity()->getComponent<Transform>()->getPos().y)
+			{
+				if (getEntity()->searchComponents<Physics>())
+				{
+					getEntity()->getComponent<Physics>()->reduceGravity(0.05);
+				}
+			}*/
 			lastPosition = np;
 		}
 	}
@@ -122,7 +129,7 @@ bool boxCollider::isColliding(glm::vec3 _pos, glm::vec3 _size)
 			return false;
 		}
 	}
-
+	
 	return true;
 
 
@@ -130,11 +137,12 @@ bool boxCollider::isColliding(glm::vec3 _pos, glm::vec3 _size)
 
 glm::vec3 boxCollider::collisionResponse(glm::vec3 _pos, glm::vec3 _size)
 {
-	float amount = 0.1f;
-	float step = 0.1f;
+	float amount = 0.01f;
+	float step = 0.01f;
 
 	while (true)
 	{
+		
 		if (!isColliding(_pos, _size)) break;
 		_pos.x += amount;
 		if (!isColliding(_pos, _size)) break;
@@ -154,6 +162,7 @@ glm::vec3 boxCollider::collisionResponse(glm::vec3 _pos, glm::vec3 _size)
 		_pos.y -= amount;
 		if (!isColliding(_pos, size)) break;
 		_pos.y += amount;
+		
 		amount += step;
 	}
 

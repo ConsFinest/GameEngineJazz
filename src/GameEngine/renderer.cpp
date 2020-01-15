@@ -158,7 +158,7 @@ void Renderer::onDisplay()
 		}
 		else
 		{
-			shader->setUniform("u_View", glm::inverse(getEngine()->currentCam.lock()->getView()));
+			shader->setUniform("u_View",(getEngine()->currentCam.lock()->getView()));
 			shader->setUniform("u_Projection", getEngine()->currentCam.lock()->getProj());
 			shader->setUniform("u_Model", transform->getModel());
 			shader->render();

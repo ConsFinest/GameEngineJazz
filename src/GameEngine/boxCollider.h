@@ -23,8 +23,6 @@ class boxCollider : public Component
 
 public:
 
-	
-	
 	void setMoveable(bool _set);
 	bool getMoveable();
 	void onInit();
@@ -32,6 +30,7 @@ public:
 	void onTick();
 	void setSize(glm::vec3 size);
 	void setOffset(glm::vec3 _offset);
+	
 
 	
 
