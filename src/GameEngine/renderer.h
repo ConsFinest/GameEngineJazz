@@ -12,10 +12,7 @@ class Renderer: public Component
 	std::sr1::shared_ptr<rend::Mesh> mesh;
 	std::sr1::shared_ptr<rend::Texture> texture;
 	std::sr1::shared_ptr<rend::Shader> shader;
-	
-	
 	std::shared_ptr<Camera> camera;
-	
 
 public:
 	Renderer();
@@ -31,7 +28,6 @@ public:
 
 	void rendererInit(const std::string &source, const std::string _mesh, const std::string _text);
 	
-
 	virtual void onDisplay();
 };
 

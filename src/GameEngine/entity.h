@@ -19,9 +19,10 @@ class Entity
 	std::vector<std::shared_ptr<Component>> components;
 	void tick();
 	void display();
-	
+
 public:
 
+	~Entity();
 	void setSkyBox(bool _set);
 	bool getSkyBox();
 	//template dont need ;

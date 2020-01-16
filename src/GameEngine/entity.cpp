@@ -19,6 +19,14 @@ void Entity::display()
 	}
 }
 
+Entity::~Entity()
+{
+	for (std::vector<std::shared_ptr<Component>>::iterator it = components.begin(); it != components.end(); it++)
+	{
+		components.erase(it);
+	}
+}
+
 void Entity::setSkyBox(bool _set)
 {
 	skybox = _set;

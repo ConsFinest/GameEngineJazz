@@ -8,6 +8,10 @@
 
 Engine::~Engine()
 {
+	for (std::vector<std::shared_ptr<Entity>>::iterator it = entities.begin(); it != entities.end(); it++)
+	{
+		entities.erase(it);
+	}
 	alcMakeContextCurrent(NULL);
 	alcDestroyContext(ALcontext);
 	alcCloseDevice(device);
