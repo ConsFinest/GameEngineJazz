@@ -85,6 +85,7 @@ private:
 	float lastTime;
 	float timeT;
 	bool firstMouse;
+	float delay;
 	
 };
 

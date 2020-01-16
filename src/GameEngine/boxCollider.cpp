@@ -31,13 +31,6 @@ void boxCollider::onCollideBox()
 			np = sp;
 			np = np - offset;
 			getEntity()->getComponent<Transform>()->setPos(np);
-			/*if (lastPosition.y == getEntity()->getComponent<Transform>()->getPos().y)
-			{
-				if (getEntity()->searchComponents<Physics>())
-				{
-					getEntity()->getComponent<Physics>()->reduceGravity(0.05);
-				}
-			}*/
 			lastPosition = np;
 		}
 	}
@@ -76,6 +69,11 @@ void boxCollider::setSize(glm::vec3 size)
 void boxCollider::setOffset(glm::vec3 _offset)
 {
 	this->size = offset;
+}
+
+glm::vec3 boxCollider::getSize()
+{
+	return size;
 }
 
 bool boxCollider::isColliding(glm::vec3 _pos, glm::vec3 _size)
@@ -142,7 +140,6 @@ glm::vec3 boxCollider::collisionResponse(glm::vec3 _pos, glm::vec3 _size)
 
 	while (true)
 	{
-		
 		if (!isColliding(_pos, _size)) break;
 		_pos.x += amount;
 		if (!isColliding(_pos, _size)) break;
@@ -160,12 +157,12 @@ glm::vec3 boxCollider::collisionResponse(glm::vec3 _pos, glm::vec3 _size)
 		if (!isColliding(_pos, _size)) break;
 		_pos.y -= amount;
 		_pos.y -= amount;
-		if (!isColliding(_pos, size)) break;
+		if (!isColliding(_pos, _size)) break;
 		_pos.y += amount;
 		
 		amount += step;
 	}
-
+	
 	return _pos;
 }
 

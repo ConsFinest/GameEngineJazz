@@ -17,6 +17,7 @@ class PlayerController : public Component
 	bool camEnt;
 	glm::vec3 offset;
 	float prevY;
+	float wait;
 
 public:
 	void onTick();

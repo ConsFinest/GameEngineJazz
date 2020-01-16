@@ -17,6 +17,14 @@ void Physics::onTick()
 		glm::vec3 pos = ent->getComponent<Transform>()->getPos();
 		
 		glm::vec3 acc = glm::vec3(0, -gravity, 0);
+		if (ent->getComponent<Transform>()->getPos().y - 4 < 0)
+		{
+			addVelocity(-vel);
+		}
+		if (ent->getComponent<Transform>()->getPos().y > 0)
+		{
+			gravity = 9.81;
+		}
 
 		glm::vec3 v = vel + (acc * (eng->getDeltaTime() / 50));
 		

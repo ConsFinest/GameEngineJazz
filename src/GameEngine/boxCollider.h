@@ -30,6 +30,7 @@ public:
 	void onTick();
 	void setSize(glm::vec3 size);
 	void setOffset(glm::vec3 _offset);
+	glm::vec3 getSize();
 	
 
 	

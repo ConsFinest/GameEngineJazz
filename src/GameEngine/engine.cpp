@@ -143,15 +143,15 @@ void Engine::start()
 					input->setMousePos(0, 0);
 				}
 			}
-			if (input->keyPressed(SDL_SCANCODE_EQUALS))
+			if (input->keyPressed(SDL_SCANCODE_EQUALS) && delay < 0) //prevents skipping to last camera
 			{
 				nextCam();
-				//std::cout << i << std::endl;
-				//std::cout << "keypress" << std::endl;
+				delay = 20; 
 			}
-			if (input->keyPressed(SDL_SCANCODE_MINUS))
+			if (input->keyPressed(SDL_SCANCODE_MINUS) && delay < 0)
 			{
 				prevCam();
+				delay = 20;
 			}
 		}
 		
@@ -172,6 +172,7 @@ void Engine::start()
 		}
 		input->onTick();
 		SDL_GL_SwapWindow(window);
+		delay--;
 	}
 
 }
@@ -216,6 +217,7 @@ void Engine::nextCam()
 		if (cam)
 		{
 			(*it).lock()->setCurrent();
+			return;
 		}
 		if ((*it).lock()->getCurrent())
 		{

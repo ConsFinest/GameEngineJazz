@@ -43,9 +43,8 @@ void PlayerController::onTick()
 		if (ent->searchComponents<Physics>())
 		{
 			std::shared_ptr<Physics> entPhys = ent->getComponent<Physics>();
-			
+		
 			entPhys->addVelocity({ 0,0.2,0 });
-			//entPhys->setGravity(9.81);
 			
 		}
 	}
@@ -54,6 +53,14 @@ void PlayerController::onTick()
 	if (ent->searchComponents<Camera>()) //stops cameras update if they aren't the active camera
 	{
 		cam = ent->getComponent<Camera>();
+		if (!cam->getCurrent())
+		{
+			update = false;
+		}
+	}
+	if (entCam->searchComponents<Camera>())
+	{
+		cam = entCam->getComponent<Camera>();
 		if (!cam->getCurrent())
 		{
 			update = false;
@@ -101,6 +108,7 @@ void PlayerController::updateVectors()
 
 void PlayerController::pcInit()
 {
+	wait = 0;
 	camEnt = false;
 	ent = getEntity();
 	trans = ent->getComponent<Transform>();
@@ -115,6 +123,7 @@ void PlayerController::pcInit()
 
 void PlayerController::pcInit(std::shared_ptr<Entity> _entcam, glm::vec3 _offset)
 {
+	wait = 0;
 	camEnt = true;
 	offset = _offset;
 	ent = getEntity();
